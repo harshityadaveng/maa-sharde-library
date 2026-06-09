@@ -1275,12 +1275,16 @@ body.dark-mode .payment-box p {
 }
 
 .owner-card img {
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: top center;
+  background: #f8f9fb;
+  padding: 5px;
   margin-bottom: 15px;
 }
+
 
 .owner-role {
   color: #f5a800;
