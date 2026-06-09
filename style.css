@@ -600,9 +600,9 @@ body.dark-mode .faq-item p {
 .social-links,
 .footer-social {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 18px;
+  gap: 15px;
+  justify-content: flex-start;
+  margin-top: 15px;
 }
 
 .social-links a,
