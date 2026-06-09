@@ -1253,3 +1253,36 @@ body.dark-mode .payment-box p {
   color: #f5a800;
   font-weight: bold;
 }
+.owners {
+  padding: 100px 8%;
+  background: #f8f9fb;
+}
+
+.owners-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.owner-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  width: 280px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.owner-card img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.owner-role {
+  color: #f5a800;
+  font-weight: bold;
+}
