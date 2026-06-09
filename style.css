@@ -628,3 +628,31 @@ body.dark-mode .faq-item p {
 .social-links img:hover {
   transform: scale(1.1);
 }
+.social-links img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: white;
+  padding: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.social-links img:hover {
+  transform: translateY(-3px) scale(1.08);
+}
+.social-links img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: white;
+  padding: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.social-links img:hover {
+  transform: translateY(-3px) scale(1.08);
+}
