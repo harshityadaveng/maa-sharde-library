@@ -543,3 +543,15 @@ body.dark-mode .faq-item p {
     font-size: 28px;
   }
 }
+.under-construction {
+  display: inline-block;
+  background: rgba(245, 197, 66, 0.15);
+  color: #f5c542;
+  border: 1px solid rgba(245, 197, 66, 0.4);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  backdrop-filter: blur(5px);
+}
