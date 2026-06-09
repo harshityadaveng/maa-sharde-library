@@ -515,3 +515,12 @@ body.dark-mode .faq-item p {
     height:auto;
     margin-bottom:20px;
 }
+.hero-logo {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: white;
+    padding: 5px;
+    margin-bottom: 20px;
+}
