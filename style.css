@@ -41,8 +41,8 @@ body {
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  background: white;
-  padding: 3px;
+  background:transparent;
+  padding:0;
 }
 
 .nav-links {
@@ -98,12 +98,12 @@ body {
 .hero-content { max-width: 760px; }
 
 .hero-logo {
-  width: 115px;
-  height: 115px;
-  object-fit: cover;
+  width: 95px;
+  height: 95px;
+  object-fit: contain;
   border-radius: 50%;
-  background: white;
-  padding: 5px;
+  background:transparent;
+  padding:0;
   margin-bottom: 20px;
   display: block;
 }
