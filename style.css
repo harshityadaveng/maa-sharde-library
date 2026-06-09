@@ -344,15 +344,16 @@ section { padding: 100px 8%; }
 }
 
 .footer-social img {
-  width: 35px;
-  height: 35px;
-  object-fit: contain;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
   margin: 0 10px;
   transition: 0.3s;
 }
 
 .footer-social img:hover {
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 /* Register page */
 .register-page {
