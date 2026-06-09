@@ -335,7 +335,7 @@ section { padding: 100px 8%; }
   align-items: center;
   flex-wrap: wrap;
   
-  min-height: 100px;
+  min-height: 200px;
 }
 
 .footer-left,
