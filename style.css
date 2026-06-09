@@ -69,11 +69,24 @@ body {
 }
 
 .dark-btn {
-  background: #f5c542;
+  width: 55px;
+  height: 55px;
   border: none;
-  padding: 10px 14px;
   border-radius: 50%;
+  background: rgba(0, 0, 0, 0.15);
+  color: rgb(255, 255, 255);
+  font-size: 24px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.dark-btn:hover {
+  transform: scale(1.08);
+  background: rgba(255,255,255,0.25);
 }
 
 .menu-icon {
@@ -908,4 +921,38 @@ body.dark-mode .admission-card p {
 
 body.dark-mode .admission-points span {
   background: #1a1a1a;
+}
+.payment-box {
+  background: #f8f9fb;
+  padding: 20px;
+  border-radius: 18px;
+  margin: 15px 0;
+  text-align: center;
+}
+
+.payment-box h3 {
+  color: #0a192f;
+  margin-bottom: 8px;
+}
+
+.payment-box p {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.qr-code {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  background: white;
+  padding: 8px;
+  border-radius: 12px;
+}
+
+.payment-note {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #0a192f;
 }
