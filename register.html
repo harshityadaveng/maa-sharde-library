@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Register - Maa Sharde Library</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<section class="register-page">
+  <div class="register-box">
+    <h1>Student Registration</h1>
+    <p>Register your seat at Maa Sharde Library</p>
+
+    <form id="studentRegisterForm">
+      <input type="text" id="studentName" placeholder="Full Name">
+      <input type="tel" id="studentPhone" placeholder="Phone Number">
+      <input type="email" id="studentEmail" placeholder="Email Address">
+      <input type="text" id="studentAddress" placeholder="Address">
+
+      <select id="studentPlan">
+        <option value="">Select Membership Plan</option>
+        <option>Daily Pass</option>
+        <option>Monthly Plan</option>
+        <option>Quarterly Plan</option>
+        <option>Yearly Plan</option>
+      </select>
+
+      <select id="studentShift">
+        <option value="">Select Study Shift</option>
+        <option>Morning Shift</option>
+        <option>Afternoon Shift</option>
+        <option>Evening Shift</option>
+        <option>Full Day</option>
+      </select>
+
+      <button type="submit">Register Now</button>
+      <p id="registerMessage"></p>
+    </form>
+
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
