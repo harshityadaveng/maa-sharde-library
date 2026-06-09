@@ -633,8 +633,6 @@ body.dark-mode .faq-item p {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  background: white;
-  padding: 5px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
 }
@@ -647,8 +645,6 @@ body.dark-mode .faq-item p {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  background: white;
-  padding: 5px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
 }
