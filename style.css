@@ -612,3 +612,19 @@ body.dark-mode .faq-item p {
   font-weight: bold;
   margin-bottom: 15px;
 }
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.social-links img {
+  width: 40px;
+  height: 40px;
+  transition: 0.3s;
+}
+
+.social-links img:hover {
+  transform: scale(1.1);
+}
