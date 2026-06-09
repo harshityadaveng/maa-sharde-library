@@ -322,7 +322,9 @@ section { padding: 100px 8%; }
   justify-content: center;
   align-items: center;
 }
-
+.footer {
+  border-top: 2px solid #f5c542;
+}
 .footer {
   background: #0a192f;
   color: white;
@@ -332,12 +334,15 @@ section { padding: 100px 8%; }
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  
+  min-height: 100px;
 }
 
 .footer-left,
 .footer-center,
 .footer-right {
-  flex: 1;
+  font: size 18px;;
+  font-weight: 500;
 }
 
 .footer-center {
@@ -351,8 +356,8 @@ section { padding: 100px 8%; }
 .footer-right a {
   color: white;
   text-decoration: none;
-  font-size: 24px;
-  margin-left: 15px;
+  font-size: 30px;
+  margin-left: 20px;
   transition: 0.3s;
 }
 
