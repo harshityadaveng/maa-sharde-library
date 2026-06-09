@@ -14,42 +14,51 @@
     <p>Register your seat at Maa Sharde Library</p>
 
     <form id="studentRegisterForm">
-      <input type="text" id="studentName" placeholder="Full Name">
-      <input type="tel" id="studentPhone" placeholder="Phone Number">
-      <input type="email" id="studentEmail" placeholder="Email Address">
-      <input type="text" id="studentAddress" placeholder="Address">
+  <input type="text" id="studentName" placeholder="Full Name">
+  <input type="tel" id="studentPhone" placeholder="Phone Number">
+  <input type="email" id="studentEmail" placeholder="Email Address">
+  <input type="text" id="studentAddress" placeholder="Address">
 
-      <select id="studentPlan">
-        <option value="">Select Membership Plan</option>
-        <option>Daily Pass</option>
-        <option>Monthly Plan</option>
-        <option>Quarterly Plan</option>
-        <option>Yearly Plan</option>
-      </select>
+  <select id="studentPlan">
+    <option value="">Select Membership Plan</option>
+    <option>Daily Pass</option>
+    <option>Monthly Plan</option>
+    <option>Quarterly Plan</option>
+    <option>Yearly Plan</option>
+  </select>
 
-      <select id="studentShift">
-        <option value="">Select Study Shift</option>
-        <option>Morning Shift</option>
-        <option>Afternoon Shift</option>
-        <option>Evening Shift</option>
-        <option>Full Day</option>
-      </select>
-<div class="payment-box">
-  <h3>Payment Option</h3>
-  <p>Scan QR code to pay your registration/library fee.</p>
+  <select id="studentShift">
+    <option value="">Select Study Shift</option>
+    <option>Morning Shift</option>
+    <option>Afternoon Shift</option>
+    <option>Evening Shift</option>
+    <option>Full Day</option>
+  </select>
 
-  <img src="images/payment-qr.png" alt="Payment QR Code" class="qr-code">
+  <button type="button" id="proceedPaymentBtn">
+    Proceed To Payment
+  </button>
 
-  <p class="payment-note">
-    After payment, keep the screenshot for verification at the library.
-  </p>
-</div>
-      <button type="submit">Register Now</button>
-      <p id="registerMessage"></p>
-    </form>
+  <div id="paymentBox" class="payment-box">
+    <h3>Scan & Pay</h3>
 
-    <a href="index.html" class="back-home">← Back to Home</a>
+    <img src="images/payment-qr.png" class="qr-code" alt="Payment QR Code">
+
+    <p>After payment, upload screenshot for verification.</p>
+
+    <input type="file" id="paymentScreenshot" accept="image/*">
+
+    <button type="button" id="paidBtn">
+      Verify Payment Details
+    </button>
   </div>
+
+  <button type="submit" id="submitBtn">
+    Complete Registration
+  </button>
+
+  <p id="registerMessage"></p>
+</form>
 </section>
 
 <script src="script.js"></script>

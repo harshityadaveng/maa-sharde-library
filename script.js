@@ -83,7 +83,7 @@ if (studentRegisterForm) {
 studentRegisterForm.reset();
 
 setTimeout(() => {
-  window.location.href = "thankyou.html";
+  window.location.href = "payment.html";
 }, 1000);
     })
     .catch(() => {

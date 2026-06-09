@@ -1,410 +1,433 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
+
   <title>Maa Sharde Digital Library</title>
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<nav class="navbar">
-  <div class="logo">
-    <img src="images/logo.png" alt="Maa Sharde Digital Library Logo">
-    <span>Maa Sharde Digital Library</span>
-  </div>
-
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#">Home</a></li>
-    <li><a href="#facilities">Facilities</a></li>
-    <li><a href="#plans">Plans</a></li>
-    <li><a href="#gallery">Gallery</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-
-  <a href="register.html" class="nav-btn">Join Now</a>
-
-  <button id="darkModeBtn" class="dark-btn">🌙</button>
-
-  <div class="menu-icon" onclick="toggleMenu()">☰</div>
-</nav>
-
-<section class="hero">
-  <div class="hero-content">
-
-    <img src="images/logo.png" class="hero-logo" alt="Maa Sharde Digital Library Logo">
-
-    <p class="tagline">Premium Study Space</p>
-    
-    <div class="live-status">
-    <span class="live-dot"></span>
-     Open 24 hours, 7 days a week
-
-</div>
-    <div class="under-construction">
-  🚧 Website Currently Under Development</div>
-     <h1>Maa Sharde Digital Library</h1>
-
-    <p class="subtitle">
-      A peaceful, modern and focused environment for students, readers and competitive exam aspirants.
-    </p>
-
-    <div class="hero-buttons">
-      <a href="register.html" class="btn primary">Book Your Seat</a>
-      <a href="#contact" class="btn secondary">Contact Us</a>
+  <nav class="navbar">
+    <div class="logo">
+      <img src="images/logo.png" alt="Maa Sharde Digital Library Logo">
+      <span>Maa Sharde Digital Library</span>
     </div>
 
-    <div class="stats">
-      <div>
-        <h3>100+</h3>
-        <p>Seats</p>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#">Home</a></li>
+      <li><a href="#facilities">Facilities</a></li>
+      <li><a href="#plans">Plans</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#owners">Owners</a></li>
+    </ul>
+
+    <a href="register.html" class="nav-btn">Join Now</a>
+
+    <button id="darkModeBtn" class="dark-btn">🌙</button>
+
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+
+      <img src="images/logo.png" class="hero-logo" alt="Maa Sharde Digital Library Logo">
+
+      <p class="tagline">Premium Study Space</p>
+
+      <div class="live-status">
+        <span class="live-dot"></span>
+        Open 24 hours, 7 days a week
+
       </div>
+      <div class="under-construction">
+        🚧 Website Currently Under Development</div>
+      <h1>Maa Sharde Digital Library</h1>
 
-      <div>
-        <h3>Wi-Fi</h3>
-        <p>Available</p>
-      </div>
-
-      <div>
-        <h3>Peaceful</h3>
-        <p>Environment</p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<section class="facilities" id="facilities">
-  <div class="section-heading">
-    <p>Our Facilities</p>
-    <h2>Everything You Need For Focused Study</h2>
-  </div>
-
-  <div class="facility-container">
-    <div class="facility-card">
-      <h3>📖 Peaceful Environment</h3>
-      <p>Silent and distraction-free space for serious study.</p>
-    </div>
-
-    <div class="facility-card">
-      <h3>❄️ AC Reading Hall</h3>
-      <p>Comfortable study area with proper cooling.</p>
-    </div>
-
-    <div class="facility-card">
-      <h3>📶 Free Wi-Fi</h3>
-      <p>Fast internet support for online learning.</p>
-    </div>
-
-    <div class="facility-card">
-      <h3>💺 Comfortable Seating</h3>
-      <p>Proper chairs and desks for long study hours.</p>
-    </div>
-
-    <div class="facility-card">
-      <h3>📰 Newspapers & Magazines</h3>
-      <p>Daily reading material for knowledge and updates.</p>
-    </div>
-
-    <div class="facility-card">
-      <h3>🔒 CCTV Security</h3>
-      <p>Safe and secure environment for every student.</p>
-    </div>
-    <div class="facility-card">
-      <h3>🚴 Parking Stand </h3>
-      <p>Secure parking facility for vehicles.</p>
-    </div>
-    <div class="facility-card">
-      <h3>🗄️Seperate Cabin </h3>
-      <p>Seperate Cabin for Study.</p>
-    </div>
-  </div>
-</section>
-
-<section class="plans" id="plans">
-  <div class="section-heading">
-    <p>Membership Plans</p>
-    <h2>Choose Your Study Plan</h2>
-  </div>
-
-  <div class="plans-container">
-    <div class="plan-card">
-      <h3>Daily Pass</h3>
-      <div class="price">₹50<span>/day</span></div>
-
-      <ul>
-        <li>✔ Peaceful Environment</li>
-        <li>✔ Comfortable Seating</li>
-        <li>✔ Free Wi-Fi</li>
-      </ul>
-
-      <a href="register.html" class="plan-btn">Get Started</a>
-    </div>
-
-    <div class="plan-card featured">
-  <div class="badge">Most Popular</div>
-
-  <h3>Yearly Plan</h3>
-
-  <p class="old-price">₹9600</p>
-
-  <div class="price">₹8640<span>/ 12 months</span></div>
-
-  <p class="discount-text">🎉 Save 10%</p>
-
-  <ul>
-    <li>✔ Unlimited Access</li>
-    <li>✔ Free Wi-Fi</li>
-    <li>✔ AC Reading Hall</li>
-    <li>✔ Best Value</li>
-    <li>✔ only 12 hours shift</li>
-  </ul>
-
-  <a href="register.html" class="plan-btn">Get Started</a>
-</div>
-    <div class="plan-card">
-      <h3>Monthly Plan</h3>
-       <div class="price">₹800<span>/month</span></div>
-       <ul>
-    <li>✔ Unlimited Access</li>
-    <li>✔ Free Wi-Fi</li>
-    <li>✔ AC Reading Hall</li>
-    <li>✔ Best Value</li>
-  </ul>
-      <a href="register.html" class="plan-btn">Get Started</a>
-    </div>
-  </div>
-</section>
-<section class="shift-fees">
-  <div class="shift-fees-card">
-    <div class="shift-fees-heading">
-      <p>Shift Wise Fees</p>
-      <h2>Library Membership Fees</h2>
-    </div>
-
-    <div class="shift-table">
-      <div class="shift-row header">
-        <span>Shift</span>
-        <span>Timing</span>
-        <span>Fees</span>
-      </div>
-
-      <div class="shift-row">
-        <span>Morning Shift</span>
-        <span>6:00 AM - 12:00 PM</span>
-        <span>₹500 / month</span>
-      </div>
-
-      <div class="shift-row">
-        <span>Afternoon Shift</span>
-        <span>12:00 PM - 6:00 PM</span>
-        <span>₹500 / month</span>
-      </div>
-
-      <div class="shift-row">
-        <span>Night Shift</span>
-        <span>6:00 PM - 6:00 am</span>
-        <span>₹500 / month</span>
-      </div>
-
-      <div class="shift-row">
-        <span>Full Day</span>
-        <span>6:00 AM - 6:00 PM</span>
-        <span>₹800 / month</span>
-      </div>
-    </div>
-  </div>
-</section>
-<section class="gallery" id="gallery">
-  <div class="section-heading">
-    <p>Library Gallery</p>
-    <h2>See Our Study Environment</h2>
-  </div>
-
-  <div class="gallery-container">
-    <img src="images/gallery1.jpg" alt="Library Image">
-    <img src="images/gallery2.jpg" alt="Library Interior">
-    <img src="images/gallery3.jpg" alt="Library Image">
-    <img src="images/gallery4.jpg" alt="Library Seats">
-    <img src="images/gallery5.jpg" alt="Library Image">
-    <img src="images/gallery6.jpg" alt="Library Image">
-    <img src="images/gallery7.jpg" alt="Library Image">
-    <img src="images/gallery8.jpg" alt="Library Image">
-    <img src="images/gallery9.jpg" alt="Library Image">
-    <img src="images/gallery10.jpg" alt="Library Image">
-    <img src="images/gallery11.jpg" alt="Library Image">
-    <img src="images/gallery12.jpg" alt="Library Image">
-    <img src="images/gallery13.jpg" alt="Library Image">
-    <img src="images/gallery14.jpg" alt="Library Image">
-    <img src="images/gallery15.jpg" alt="Library Image">
-    <img src="images/gallery16.jpg" alt="Library Image">
-    <img src="images/gallery17.jpg" alt="Library Image">
-    <img src="images/gallery18.jpg" alt="Library Image">
-</div>
-  </div>
-</section>
-
-<section class="reviews">
-  <div class="section-heading">
-    <p>Student Reviews</p>
-    <h2>What Students Say About Us</h2>
-  </div>
-
-  <div class="review-container">
-    <div class="review-card">
-      <p>"Maa Sharde Digital Library ka environment bahut peaceful hai. Long study hours ke liye best place."</p>
-      <h3>Rahul Sharma</h3>
-      <span>UPSC Aspirant</span>
-    </div>
-
-    <div class="review-card">
-      <p>"Comfortable seating, silent hall aur Wi-Fi facility ki wajah se meri study routine improve hui."</p>
-      <h3>Anjali Verma</h3>
-      <span>SSC Student</span>
-    </div>
-
-    <div class="review-card">
-      <p>"Best library for focused study. Clean space, good environment and helpful management."</p>
-      <h3>Aman Singh</h3>
-      <span>College Student</span>
-    </div>
-  </div>
-</section>
-
-<section class="faq" id="faq">
-  <div class="section-heading">
-    <p>Frequently Asked Questions</p>
-    <h2>Have Questions? We Have Answers</h2>
-  </div>
-
-  <div class="faq-container">
-    <div class="faq-item">
-      <h3>📶 Is Wi-Fi available in the library?</h3>
-      <p>Yes, high-speed Wi-Fi is available for all members.</p>
-    </div>
-
-    <div class="faq-item">
-      <h3>❄️ Is AC facility available?</h3>
-      <p>Yes, we provide a comfortable AC study environment.</p>
-    </div>
-
-    <div class="faq-item">
-      <h3>📚 Can I visit before joining?</h3>
-      <p>Yes, students are welcome to visit and explore the library.</p>
-    </div>
-
-    <div class="faq-item">
-      <h3>🪑 Are seats limited?</h3>
-      <p>Yes, seats are limited. Early registration is recommended.</p>
-    </div>
-
-    <div class="faq-item">
-      <h3>🕒 What are the library timings?</h3>
-      <p>The library is open 24/7.</p>
-    </div>
-
-    <div class="faq-item">
-      <h3>💳 Which membership plans are available?</h3>
-      <p>Daily, Monthly, Quarterly, and other plans may be available.</p>
-    </div>
-  </div>
-</section>
-
-<section class="contact" id="contact">
-  <div class="section-heading">
-    <p>Contact Us</p>
-    <h2>Visit Maa Sharde Digital Library</h2>
-  </div>
-
-  <div class="contact-container">
-    <div class="contact-info">
-      <h3>Get In Touch</h3>
-      <br>
-
-      <p><strong>👥 Library Owners:</strong><br>Manoj Yadav & Vipin Yadav</p>
-      <br>
-      <p>
-        <strong>📍 Address:</strong><br>
-        Jalalabad Sariyan Chauraha , Ramlila Ground Road, Near Kushwaha chatravas Hostel , Infront Yadav Dairy 
+      <p class="subtitle">
+        A peaceful, modern and focused environment for students, readers and competitive exam aspirants.
       </p>
-      <br>
 
-      <p>
-        <strong>📞 Phone:</strong><br>
-        +91 9452032322, +91 7860483848, +91 7309353911
-      </p>
-      <br>
-      
-      <p><strong>🕒 Timing:</strong><br>12:00 AM - 12:00 PM (24/7)</p>
-      <br>
+      <div class="hero-buttons">
+        <a href="register.html" class="btn primary">Book Your Seat</a>
+        <a href="#contact" class="btn secondary">Contact Us</a>
+      </div>
 
-      <p><strong>📶 Facilities:</strong><br>AC • Wi-Fi • CCTV • Drinking Water</p>
-      <br>
+      <div class="stats">
+        <div>
+          <h3>100+</h3>
+          <p>Seats</p>
+        </div>
 
-      <a href="https://wa.me/919452032322" class="contact-btn" target="_blank">
-        Contact on WhatsApp
+        <div>
+          <h3>Wi-Fi</h3>
+          <p>Available</p>
+        </div>
+
+        <div>
+          <h3>Peaceful</h3>
+          <p>Environment</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="facilities" id="facilities">
+    <div class="section-heading">
+      <p>Our Facilities</p>
+      <h2>Everything You Need For Focused Study</h2>
+    </div>
+
+    <div class="facility-container">
+      <div class="facility-card">
+        <h3>📖 Peaceful Environment</h3>
+        <p>Silent and distraction-free space for serious study.</p>
+      </div>
+
+      <div class="facility-card">
+        <h3>❄️ AC Reading Hall</h3>
+        <p>Comfortable study area with proper cooling.</p>
+      </div>
+
+      <div class="facility-card">
+        <h3>📶 Free Wi-Fi</h3>
+        <p>Fast internet support for online learning.</p>
+      </div>
+
+      <div class="facility-card">
+        <h3>💺 Comfortable Seating</h3>
+        <p>Proper chairs and desks for long study hours.</p>
+      </div>
+
+      <div class="facility-card">
+        <h3>📰 Newspapers & Magazines</h3>
+        <p>Daily reading material for knowledge and updates.</p>
+      </div>
+
+      <div class="facility-card">
+        <h3>🔒 CCTV Security</h3>
+        <p>Safe and secure environment for every student.</p>
+      </div>
+      <div class="facility-card">
+        <h3>🚴 Parking Stand </h3>
+        <p>Secure parking facility for vehicles.</p>
+      </div>
+      <div class="facility-card">
+        <h3>🗄️Seperate Cabin </h3>
+        <p>Seperate Cabin for Study.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="plans" id="plans">
+    <div class="section-heading">
+      <p>Membership Plans</p>
+      <h2>Choose Your Study Plan</h2>
+    </div>
+
+    <div class="plans-container">
+      <div class="plan-card">
+        <h3>Daily Pass</h3>
+        <div class="price">₹50<span>/day</span></div>
+
+        <ul>
+          <li>✔ Peaceful Environment</li>
+          <li>✔ Comfortable Seating</li>
+          <li>✔ Free Wi-Fi</li>
+        </ul>
+
+        <a href="register.html" class="plan-btn">Get Started</a>
+      </div>
+
+      <div class="plan-card featured">
+        <div class="badge">Most Popular</div>
+
+        <h3>Yearly Plan</h3>
+
+        <p class="old-price">₹9600</p>
+
+        <div class="price">₹8640<span>/ 12 months</span></div>
+
+        <p class="discount-text">🎉 Save 10%</p>
+
+        <ul>
+          <li>✔ Unlimited Access</li>
+          <li>✔ Free Wi-Fi</li>
+          <li>✔ AC Reading Hall</li>
+          <li>✔ Best Value</li>
+          <li>✔ only 12 hours shift</li>
+        </ul>
+
+        <a href="register.html" class="plan-btn">Get Started</a>
+      </div>
+      <div class="plan-card">
+        <h3>Monthly Plan</h3>
+        <div class="price">₹800<span>/month</span></div>
+        <ul>
+          <li>✔ Unlimited Access</li>
+          <li>✔ Free Wi-Fi</li>
+          <li>✔ AC Reading Hall</li>
+          <li>✔ Best Value</li>
+        </ul>
+        <a href="register.html" class="plan-btn">Get Started</a>
+      </div>
+    </div>
+  </section>
+  <section class="shift-fees">
+    <div class="shift-fees-card">
+      <div class="shift-fees-heading">
+        <p>Shift Wise Fees</p>
+        <h2>Library Membership Fees</h2>
+      </div>
+
+      <div class="shift-table">
+        <div class="shift-row header">
+          <span>Shift</span>
+          <span>Timing</span>
+          <span>Fees</span>
+        </div>
+
+        <div class="shift-row">
+          <span>Morning Shift</span>
+          <span>6:00 AM - 12:00 PM</span>
+          <span>₹500 / month</span>
+        </div>
+
+        <div class="shift-row">
+          <span>Afternoon Shift</span>
+          <span>12:00 PM - 6:00 PM</span>
+          <span>₹500 / month</span>
+        </div>
+
+        <div class="shift-row">
+          <span>Night Shift</span>
+          <span>6:00 PM - 6:00 am</span>
+          <span>₹500 / month</span>
+        </div>
+
+        <div class="shift-row">
+          <span>Full Day</span>
+          <span>6:00 AM - 6:00 PM</span>
+          <span>₹800 / month</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="gallery" id="gallery">
+    <div class="section-heading">
+      <p>Library Gallery</p>
+      <h2>See Our Study Environment</h2>
+    </div>
+
+    <div class="gallery-container">
+      <img src="images/gallery1.jpg" alt="Library Image">
+      <img src="images/gallery2.jpg" alt="Library Interior">
+      <img src="images/gallery3.jpg" alt="Library Image">
+      <img src="images/gallery4.jpg" alt="Library Seats">
+      <img src="images/gallery5.jpg" alt="Library Image">
+      <img src="images/gallery6.jpg" alt="Library Image">
+      <img src="images/gallery7.jpg" alt="Library Image">
+      <img src="images/gallery8.jpg" alt="Library Image">
+      <img src="images/gallery9.jpg" alt="Library Image">
+      <img src="images/gallery10.jpg" alt="Library Image">
+      <img src="images/gallery11.jpg" alt="Library Image">
+      <img src="images/gallery12.jpg" alt="Library Image">
+      <img src="images/gallery13.jpg" alt="Library Image">
+      <img src="images/gallery14.jpg" alt="Library Image">
+      <img src="images/gallery15.jpg" alt="Library Image">
+      <img src="images/gallery16.jpg" alt="Library Image">
+      <img src="images/gallery17.jpg" alt="Library Image">
+      <img src="images/gallery18.jpg" alt="Library Image">
+    </div>
+    </div>
+  </section>
+
+  <section class="reviews">
+    <div class="section-heading">
+      <p>Student Reviews</p>
+      <h2>What Students Say About Us</h2>
+    </div>
+
+    <div class="review-container">
+      <div class="review-card">
+        <p>"Maa Sharde Digital Library ka environment bahut peaceful hai. Long study hours ke liye best place."</p>
+        <h3>Rahul Sharma</h3>
+        <span>UPSC Aspirant</span>
+      </div>
+
+      <div class="review-card">
+        <p>"Comfortable seating, silent hall aur Wi-Fi facility ki wajah se meri study routine improve hui."</p>
+        <h3>Anjali Verma</h3>
+        <span>SSC Student</span>
+      </div>
+
+      <div class="review-card">
+        <p>"Best library for focused study. Clean space, good environment and helpful management."</p>
+        <h3>Aman Singh</h3>
+        <span>College Student</span>
+      </div>
+    </div>
+  </section>
+      <section class="faq" id="faq">
+    <div class="section-heading">
+      <p>Frequently Asked Questions</p>
+      <h2>Have Questions? We Have Answers</h2>
+    </div>
+
+    <div class="faq-container">
+      <div class="faq-item">
+        <h3>📶 Is Wi-Fi available in the library?</h3>
+        <p>Yes, high-speed Wi-Fi is available for all members.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>❄️ Is AC facility available?</h3>
+        <p>Yes, we provide a comfortable AC study environment.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>📚 Can I visit before joining?</h3>
+        <p>Yes, students are welcome to visit and explore the library.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>🪑 Are seats limited?</h3>
+        <p>Yes, seats are limited. Early registration is recommended.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>🕒 What are the library timings?</h3>
+        <p>The library is open 24/7.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>💳 Which membership plans are available?</h3>
+        <p>Daily, Monthly, Quarterly, and other plans may be available.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="section-heading">
+      <p>Contact Us</p>
+      <h2>Visit Maa Sharde Digital Library</h2>
+    </div>
+
+    <div class="contact-container">
+      <div class="contact-info">
+        <h3>Get In Touch</h3>
+        <br>
+
+        <p><strong>👥 Library Owners:</strong><br>Manoj Yadav & Vipin Yadav</p>
+        <br>
+        <p>
+          <strong>📍 Address:</strong><br>
+          Jalalabad Sariyan Chauraha , Ramlila Ground Road, Near Kushwaha chatravas Hostel , Infront Yadav Dairy
+        </p>
+        <br>
+
+        <p>
+          <strong>📞 Phone:</strong><br>
+          +91 9452032322, +91 7860483848, +91 7309353911
+        </p>
+        <br>
+
+        <p><strong>🕒 Timing:</strong><br>12:00 AM - 12:00 PM (24/7)</p>
+        <br>
+
+        <p><strong>📶 Facilities:</strong><br>AC • Wi-Fi • CCTV • Drinking Water</p>
+        <br>
+
+        <a href="https://wa.me/919452032322" class="contact-btn" target="_blank">
+          Contact on WhatsApp
+        </a>
+
+      </div>
+
+      <div class="admission-card">
+        <h3>Want to Get Admission?</h3>
+        <h3>If you have any Doubts</h3>
+
+        <p>
+          Please visit Maa Sharde Digital Library physically for admission,
+          seat availability, fee details and complete registration process.
+        </p>
+
+        <div class="admission-points">
+          <span>📍 Visit Library</span>
+          <span>🪑 Check Seat Availability</span>
+          <span>💳 Confirm Fees</span>
+          <span>✅ Complete Admission</span>
+        </div>
+
+        <a href="#location" class="admission-btn">View Location</a>
+      </div>
+    </div>
+  </section>
+
+   <section class="owners" id="owners">
+    <div class="section-heading">
+      <p>Management Team</p>
+      <h2>Meet Our Library Owners</h2>
+    </div>
+
+    <div class="owners-container">
+      <div class="owner-card">
+        <img src="images/manoj-yadav.jpg" alt="Manoj Yadav">
+        <h3>Manoj Yadav</h3>
+        <p class="owner-role">Founder</p>
+      </div>
+
+      <div class="owner-card">
+        <img src="images/vipin-yadav.jpg" alt="Vipin Yadav">
+        <h3>Vipin Yadav</h3>
+        <p class="owner-role">Director</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="location">
+    <div class="section-heading">
+      <p>Find Us</p>
+      <h2>Library Location</h2>
+    </div>
+
+    <div class="map-container">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.5857380135512!2d79.65248487517188!3d27.730074124489256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399fc900306270e5%3A0xd82a82f1f8b5ef4d!2sMaa%20Sharde%20Digital%20Library%20Parashurampuri!5e0!3m2!1sen!2sin!4v1781008390032!5m2!1sen!2sin"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </section>
+  <a href="https://wa.me/919452032322" class="whatsapp-btn" target="_blank">💬</a>
+
+  <footer class="footer">
+    <h3>Maa Sharde Digital Library</h3>
+
+    <p>Your Peaceful Place to Study & Succeed</p>
+
+    <p>© 2026 All Rights Reserved</p>
+
+    <div class="footer-social">
+      <a href="https://wa.me/919452032322" target="_blank">
+        <img src="images/whatsapp.png" alt="WhatsApp">
       </a>
-      
+
+      <a href="https://instagram.com/M.S_Digital_Library" target="_blank">
+        <img src="images/instagram.png" alt="Instagram">
+      </a>
     </div>
-
-    <div class="admission-card">
-  <h3>Want to Get Admission?</h3>
-  <h3>If you have any Doubts</h3>
-
-  <p>
-    Please visit Maa Sharde Digital Library physically for admission,
-    seat availability, fee details and complete registration process.
-  </p>
-
-  <div class="admission-points">
-    <span>📍 Visit Library</span>
-    <span>🪑 Check Seat Availability</span>
-    <span>💳 Confirm Fees</span>
-    <span>✅ Complete Admission</span>
-  </div>
-
-  <a href="#location" class="admission-btn">View Location</a>
-</div>
-  </div>
-</section>
-<section class="location">
-  <div class="section-heading">
-    <p>Find Us</p>
-    <h2>Library Location</h2>
-  </div>
-
-  <div class="map-container">
-  <iframe
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.5857380135512!2d79.65248487517188!3d27.730074124489256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399fc900306270e5%3A0xd82a82f1f8b5ef4d!2sMaa%20Sharde%20Digital%20Library%20Parashurampuri!5e0!3m2!1sen!2sin!4v1781008390032!5m2!1sen!2sin"
-    allowfullscreen=""
-    loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade">
-  </iframe>
-</div>
-</section>
-<a href="https://wa.me/919452032322" class="whatsapp-btn" target="_blank">💬</a>
-
-<footer class="footer">
-  <h3>Maa Sharde Digital Library</h3>
-
-  <p>Your Peaceful Place to Study & Succeed</p>
-
-  <p>© 2026 All Rights Reserved</p>
-
-  <div class="footer-social">
-    <a href="https://wa.me/919452032322" target="_blank">
-      <img src="images/whatsapp.png" alt="WhatsApp">
-    </a>
-
-    <a href="https://instagram.com/M.S_Digital_Library" target="_blank">
-      <img src="images/instagram.png" alt="Instagram">
-    </a>
-  </div>
-</footer>
-<script src="script.js"></script>
+  </footer>
+  <script src="script.js"></script>
 
 </body>
+
 </html>
