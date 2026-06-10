@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login - Maa Sharde Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f9fb;
+      padding: 40px 20px;
+    }
+    .admin-card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      padding: 34px 32px;
+      border-radius: 24px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.12);
+      text-align: center;
+    }
+    .admin-card h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #0a192f;
+    }
+    .admin-card input {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      font-size: 15px;
+      outline: none;
+    }
+    .admin-card button {
+      width: 100%;
+      padding: 14px 18px;
+      border: none;
+      border-radius: 14px;
+      background: #f5c542;
+      color: #0a192f;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .admin-card button:hover { background: #f5a800; }
+    .admin-login-footer {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #555;
+    }
+    .admin-login-footer a {
+      color: #0a192f;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .admin-message {
+      min-height: 24px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+<section class="admin-login-page">
+  <div class="admin-card">
+    <h1>Admin Login</h1>
+    <p class="admin-message" id="adminLoginMessage"></p>
+    <form id="adminLoginForm">
+      <input id="adminEmail" type="email" placeholder="Email Address" required />
+      <input id="adminPassword" type="password" placeholder="Password" required />
+      <button type="submit">Login to Dashboard</button>
+    </form>
+    <p class="admin-login-footer">
+      <a href="index.html">Back to Website</a>
+    </p>
+  </div>
+</section>
+<script src="admin.js"></script>
+</body>
+</html>

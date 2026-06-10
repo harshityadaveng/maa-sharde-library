@@ -10,6 +10,9 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const planRoutes = require('./routes/planRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 const seatRoutes = require('./routes/seatRoutes');
 
 const app = express();

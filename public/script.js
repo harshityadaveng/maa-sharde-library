@@ -21,6 +21,29 @@ const apiBaseUrl = window.location.protocol.startsWith('http')
   ? window.location.origin
   : 'http://localhost:5000';
 
+const studentPlanSelect = document.getElementById('studentPlan');
+if (studentPlanSelect) {
+  loadMembershipPlans();
+}
+
+async function loadMembershipPlans() {
+  try {
+    const response = await fetch(`${apiBaseUrl}/api/plans`);
+    if (!response.ok) return;
+    const plans = await response.json();
+    if (!plans || !plans.length) return;
+    studentPlanSelect.innerHTML = '<option value="">Select Membership Plan *</option>';
+    plans.forEach((plan) => {
+      const option = document.createElement('option');
+      option.value = plan.title;
+      option.textContent = `${plan.title} (₹${plan.price})`;
+      studentPlanSelect.appendChild(option);
+    });
+  } catch (error) {
+    // fallback to built-in plan options if plans cannot load
+  }
+}
+
 const bookingForm = document.querySelector(".booking-form");
 
 if (bookingForm) {

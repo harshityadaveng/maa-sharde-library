@@ -86,7 +86,7 @@ const studentSchema = new mongoose.Schema(
     plan: {
       type: String,
       required: [true, 'Membership Plan is required'],
-      enum: ['Daily Pass', 'Monthly Plan', 'Quarterly Plan', 'Yearly Plan'],
+      trim: true,
     },
     joiningDate: {
       type: Date,

@@ -31,6 +31,17 @@ const registerUser = async (req, res, next) => {
       throw new Error('User already exists with this email');
     }
 
+    // Determine secure role assignment
+    let userRole = 'student';
+    if (role === 'admin') {
+      const adminExists = await User.exists({ role: 'admin' });
+      if (adminExists && process.env.ALLOW_ADMIN_REGISTRATION !== 'true') {
+        res.status(403);
+        throw new Error('Admin registration is not allowed.');
+      }
+      userRole = 'admin';
+    }
+
     // Create user
     const user = await User.create({
       name,
@@ -38,7 +49,7 @@ const registerUser = async (req, res, next) => {
       password,
       phone,
       address,
-      role: role || 'student', // Allow setting admin if explicitly requested in dev/seeding
+      role: userRole,
     });
 
     if (user) {
