@@ -5,39 +5,330 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment - Maa Sharde Digital Library</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Payment System Extras ──────────────────── */
+    .payment-steps {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 35px;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: calc(50% + 20px);
+      width: 100%;
+      height: 2px;
+      background: #ddd;
+    }
+    .step.done:not(:last-child)::after { background: #22c55e; }
+    .step.active:not(:last-child)::after { background: #f5c542; }
+    .step-bubble {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ddd;
+      color: #888;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-bottom: 8px;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+    .step.done .step-bubble  { background: #22c55e; color: white; }
+    .step.active .step-bubble { background: #f5c542; color: #0a192f; }
+    .step-label {
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .step.active .step-label { color: #0a192f; font-weight: bold; }
+    .step.done .step-label   { color: #22c55e; }
+
+    .upi-info-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 14px;
+      padding: 16px 22px;
+      margin: 18px 0;
+      text-align: center;
+    }
+    .upi-info-box p { margin: 4px 0; color: #0369a1; font-size: 14px; }
+    .upi-info-box strong { font-size: 16px; color: #0a192f; }
+
+    .amount-plans {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .amount-option {
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 14px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      background: white;
+    }
+    .amount-option:hover { border-color: #f5c542; background: #fffbeb; }
+    .amount-option.selected { border-color: #f5c542; background: #fffbeb; }
+    .amount-option .plan-name { font-weight: bold; color: #0a192f; font-size: 14px; }
+    .amount-option .plan-price { font-size: 20px; font-weight: 800; color: #f5a800; }
+
+    .upload-zone {
+      border: 2px dashed #d1d5db;
+      border-radius: 14px;
+      padding: 25px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #fafafa;
+      margin: 15px 0;
+      position: relative;
+    }
+    .upload-zone:hover { border-color: #f5c542; background: #fffbeb; }
+    .upload-zone.has-file { border-color: #22c55e; background: #f0fdf4; }
+    .upload-zone input[type=file] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-zone .upload-icon { font-size: 32px; margin-bottom: 8px; }
+    .upload-zone p { margin: 4px 0; color: #555; font-size: 14px; }
+    .upload-zone .file-name { color: #22c55e; font-weight: bold; font-size: 13px; }
+
+    .pay-status-banner {
+      border-radius: 14px;
+      padding: 20px 25px;
+      margin-top: 20px;
+      text-align: center;
+      display: none;
+    }
+    .pay-status-banner.pending         { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+    .pay-status-banner.under_verification { background: #eff6ff; border: 1px solid #93c5fd; color: #1e40af; }
+    .pay-status-banner.approved        { background: #f0fdf4; border: 1px solid #86efac; color: #166534; }
+    .pay-status-banner.rejected        { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
+    .pay-status-banner .status-icon    { font-size: 36px; margin-bottom: 8px; }
+    .pay-status-banner h3              { margin-bottom: 6px; }
+    .pay-status-banner p               { font-size: 14px; margin: 0; }
+
+    .submit-pay-btn {
+      width: 100%;
+      padding: 15px;
+      background: #f5c542;
+      color: #0a192f;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+    .submit-pay-btn:hover { background: #f5a800; transform: translateY(-1px); }
+    .submit-pay-btn:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; transform: none; }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid #0a192f;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .payment-id-badge {
+      display: inline-block;
+      background: #0a192f;
+      color: #f5c542;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+
+    .offline-steps {
+      text-align: left;
+      margin: 20px 0;
+    }
+    .offline-step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .offline-step-num {
+      width: 28px; height: 28px;
+      background: #f5c542;
+      color: #0a192f;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .offline-step-item p { margin: 0; font-size: 14px; color: #555; line-height: 1.5; }
+
+    @media (max-width: 600px) {
+      .amount-plans { grid-template-columns: 1fr; }
+      .payment-steps { gap: 0; }
+      .step-label { font-size: 9px; }
+    }
+
+    body.dark-mode .upi-info-box { background: #1e293b; border-color: #334155; }
+    body.dark-mode .upi-info-box p { color: #93c5fd; }
+    body.dark-mode .upi-info-box strong { color: white; }
+    body.dark-mode .amount-option { background: #1e1e1e; border-color: #333; }
+    body.dark-mode .amount-option:hover,
+    body.dark-mode .amount-option.selected { border-color: #f5c542; background: #2a2518; }
+    body.dark-mode .amount-option .plan-name { color: white; }
+    body.dark-mode .upload-zone { background: #1e1e1e; border-color: #333; }
+    body.dark-mode .upload-zone p { color: #aaa; }
+    body.dark-mode .step-label { color: #aaa; }
+    body.dark-mode .step.active .step-label { color: white; }
+  </style>
 </head>
 <body>
 
 <section class="payment-page">
-  <div class="payment-card">
+  <div class="payment-card" style="max-width: 780px;">
 
-    <h1>Choose Payment Option</h1>
-    <p class="payment-subtitle">
-      Complete your registration by choosing one payment method.
-    </p>
+    <h1>Complete Your Payment</h1>
+    <p class="payment-subtitle">Choose a payment method and upload your screenshot for verification.</p>
+
+    <!-- Progress Steps -->
+    <div class="payment-steps">
+      <div class="step done" id="step1">
+        <div class="step-bubble">✓</div>
+        <div class="step-label">Registration</div>
+      </div>
+      <div class="step active" id="step2">
+        <div class="step-bubble">2</div>
+        <div class="step-label">Payment</div>
+      </div>
+      <div class="step" id="step3">
+        <div class="step-bubble">3</div>
+        <div class="step-label">Verification</div>
+      </div>
+      <div class="step" id="step4">
+        <div class="step-bubble">4</div>
+        <div class="step-label">Approved</div>
+      </div>
+    </div>
 
     <div class="payment-choice">
 
-      <div class="payment-option">
-        <h2>Pay Online</h2>
-        <p>Scan the QR code and pay your library fee.</p>
+      <!-- ── Online Payment ────────────────────────── -->
+      <div class="payment-option" id="onlinePanel">
+        <h2>💳 Pay Online</h2>
+        <p>Select your plan, scan the QR code with any UPI app and pay.</p>
 
-        <img src="images/payment-qr.png" alt="Payment QR Code" class="payment-qr">
+        <!-- Plan & amount selector -->
+        <div class="amount-plans">
+          <div class="amount-option" data-amount="50" onclick="selectPlan(this)">
+            <div class="plan-name">Daily Pass</div>
+            <div class="plan-price">₹50</div>
+          </div>
+          <div class="amount-option" data-amount="500" onclick="selectPlan(this)">
+            <div class="plan-name">Monthly Plan</div>
+            <div class="plan-price">₹500</div>
+          </div>
+          <div class="amount-option" data-amount="1350" onclick="selectPlan(this)">
+            <div class="plan-name">Quarterly Plan</div>
+            <div class="plan-price">₹1350</div>
+          </div>
+          <div class="amount-option selected" data-amount="8640" onclick="selectPlan(this)">
+            <div class="plan-name">Yearly Plan</div>
+            <div class="plan-price">₹8640</div>
+          </div>
+        </div>
 
-        <a href="thankyou.html" class="payment-btn">
-          I Have Paid Online
-        </a>
+        <!-- QR Code -->
+        <div class="upi-info-box">
+          <p>Scan with Google Pay, PhonePe, Paytm or any UPI app</p>
+          <strong>UPI ID: immanoj15-1@okhdfcbank</strong>
+          <p style="margin-top:4px; color:#555;">Beneficiary: <strong>Manoj Yadav</strong></p>
+        </div>
+
+        <img src="images/payment-qr.png" alt="Payment QR Code" class="payment-qr"
+             style="display:block; margin:0 auto 20px;">
+
+        <!-- Upload zone -->
+        <p style="font-weight:bold; text-align:left; margin-bottom:6px; font-size:14px;">
+          📤 Upload Payment Screenshot *
+        </p>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="paymentScreenshotOnline" accept="image/*" onchange="handleFileChange(this)">
+          <div class="upload-icon">📷</div>
+          <p>Click or drag your screenshot here</p>
+          <p style="font-size:12px; color:#aaa;">JPG, PNG, GIF — max 5 MB</p>
+          <div class="file-name" id="fileNameDisplay" style="display:none;"></div>
+        </div>
+
+        <button class="submit-pay-btn" id="submitOnlineBtn" onclick="submitOnlinePayment()" disabled>
+          Confirm & Submit Payment
+        </button>
+
+        <!-- Status feedback -->
+        <p id="onlineMsg" style="margin-top:12px; font-weight:bold; text-align:center; font-size:14px;"></p>
+
+        <!-- Status Banner (after submission) -->
+        <div class="pay-status-banner" id="statusBanner">
+          <div class="status-icon" id="statusIcon"></div>
+          <h3 id="statusTitle"></h3>
+          <p id="statusDesc"></p>
+          <div id="paymentIdBadge"></div>
+          <p id="adminRemarksText" style="margin-top:10px; font-size:13px;"></p>
+        </div>
       </div>
 
+      <!-- ── Offline Payment ───────────────────────── -->
       <div class="payment-option">
-        <h2>Pay Offline</h2>
-        <p>
-          You can visit Maa Sharde Digital Library physically and pay your fee at the library counter.
-        </p>
+        <h2>🏫 Pay Offline</h2>
+        <p>Visit Maa Sharde Digital Library and pay your fee at the counter.</p>
 
         <div class="offline-icon">🏫</div>
 
-        <a href="thankyou.html" class="payment-btn offline">
+        <div class="offline-steps">
+          <div class="offline-step-item">
+            <div class="offline-step-num">1</div>
+            <p>Visit the library at <strong>Jalalabad Sariyan Chauraha, Ramlila Ground Road</strong></p>
+          </div>
+          <div class="offline-step-item">
+            <div class="offline-step-num">2</div>
+            <p>Carry your <strong>Student Registration ID</strong> (shown after registration) or show your phone number.</p>
+          </div>
+          <div class="offline-step-item">
+            <div class="offline-step-num">3</div>
+            <p>Pay the fee at the counter and collect your <strong>membership card</strong>.</p>
+          </div>
+        </div>
+
+        <div class="upi-info-box">
+          <p>📞 Contact before visiting</p>
+          <strong>+91 9452032322</strong>
+          <p style="color:#555; font-size:13px;">Mon–Sun · 24 hours</p>
+        </div>
+
+        <a href="thankyou.html" class="payment-btn offline" style="display:block; text-align:center; margin-top:20px;">
           I Will Pay Offline
         </a>
       </div>
@@ -49,5 +340,151 @@
   </div>
 </section>
 
+<script>
+  // Retrieve student DB ID stored during registration
+  const studentDbId = localStorage.getItem('studentDbId');
+  const apiBaseUrl = window.location.protocol.startsWith('http')
+    ? window.location.origin
+    : 'http://localhost:5000';
+  let selectedAmount = 8640; // default Yearly Plan
+
+  function selectPlan(el) {
+    document.querySelectorAll('.amount-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedAmount = Number(el.dataset.amount);
+  }
+
+  function handleFileChange(input) {
+    const zone = document.getElementById('uploadZone');
+    const nameDisplay = document.getElementById('fileNameDisplay');
+    const submitBtn = document.getElementById('submitOnlineBtn');
+    if (input.files.length > 0) {
+      zone.classList.add('has-file');
+      nameDisplay.style.display = 'block';
+      nameDisplay.textContent = '✅ ' + input.files[0].name;
+      submitBtn.disabled = false;
+    } else {
+      zone.classList.remove('has-file');
+      nameDisplay.style.display = 'none';
+      submitBtn.disabled = true;
+    }
+  }
+
+  async function submitOnlinePayment() {
+    const msgEl = document.getElementById('onlineMsg');
+    const submitBtn = document.getElementById('submitOnlineBtn');
+    const screenshotInput = document.getElementById('paymentScreenshotOnline');
+
+    if (!studentDbId) {
+      msgEl.style.color = 'red';
+      msgEl.innerHTML = '⚠️ No registration found. Please complete registration first.';
+      return;
+    }
+
+    if (!screenshotInput.files.length) {
+      msgEl.style.color = 'red';
+      msgEl.innerHTML = '⚠️ Please upload your payment screenshot.';
+      return;
+    }
+
+    // Loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading-spinner"></span>Uploading...';
+    msgEl.style.color = '#f5a800';
+    msgEl.innerHTML = '⏳ Uploading screenshot to server...';
+
+    const formData = new FormData();
+    formData.append('paymentScreenshot', screenshotInput.files[0]);
+    formData.append('studentDbId', studentDbId);
+    formData.append('amount', selectedAmount);
+
+    try {
+      const res = await fetch(`${apiBaseUrl}/api/payments/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || 'Upload failed.');
+
+      // Store payment ID for status polling
+      localStorage.setItem('paymentDbId', data.payment._id);
+      localStorage.removeItem('studentDbId');
+
+      msgEl.innerHTML = '';
+      showStatusBanner('under_verification', data.payment);
+      submitBtn.style.display = 'none';
+
+      // Advance step indicators
+      document.getElementById('step3').classList.add('active');
+      document.getElementById('step3').querySelector('.step-bubble').textContent = '3';
+
+    } catch (err) {
+      msgEl.style.color = 'red';
+      msgEl.innerHTML = '❌ ' + (err.message || 'Something went wrong. Please try again.');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Confirm & Submit Payment';
+    }
+  }
+
+  function showStatusBanner(status, payment) {
+    const banner = document.getElementById('statusBanner');
+    const icon   = document.getElementById('statusIcon');
+    const title  = document.getElementById('statusTitle');
+    const desc   = document.getElementById('statusDesc');
+    const badge  = document.getElementById('paymentIdBadge');
+    const remarks = document.getElementById('adminRemarksText');
+
+    const config = {
+      pending:           { icon:'⏳', title:'Payment Pending',       desc:'Your payment is being processed.' },
+      under_verification:{ icon:'🔍', title:'Under Verification',    desc:'Admin is reviewing your payment screenshot. You will be notified once approved.' },
+      approved:          { icon:'✅', title:'Payment Approved!',     desc:'Your membership has been activated. Welcome to Maa Sharde Library!' },
+      rejected:          { icon:'❌', title:'Payment Rejected',      desc:'Your payment was not verified. Please contact the library or re-upload.' },
+    };
+
+    const cfg = config[status] || config.pending;
+    banner.className = `pay-status-banner ${status}`;
+    icon.textContent  = cfg.icon;
+    title.textContent = cfg.title;
+    desc.textContent  = cfg.desc;
+
+    if (payment && payment.paymentId) {
+      badge.innerHTML = `<div class="payment-id-badge">Payment ID: ${payment.paymentId}</div>`;
+    }
+    if (payment && payment.adminRemarks) {
+      remarks.textContent = `Admin Note: ${payment.adminRemarks}`;
+    }
+
+    banner.style.display = 'block';
+
+    // Redirect to thank you on approved
+    if (status === 'approved') {
+      document.getElementById('step4').classList.add('done');
+      document.getElementById('step4').querySelector('.step-bubble').textContent = '✓';
+      setTimeout(() => { window.location.href = 'thankyou.html'; }, 2500);
+    }
+  }
+
+  // On page load: check if payment already submitted and poll status
+  window.addEventListener('DOMContentLoaded', () => {
+    const paymentDbId = localStorage.getItem('paymentDbId');
+    if (paymentDbId) {
+      // Show last status
+      fetch(`${apiBaseUrl}/api/payments/${paymentDbId}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.paymentStatus) {
+            showStatusBanner(data.paymentStatus, data);
+            document.getElementById('submitOnlineBtn').style.display = 'none';
+            document.getElementById('step3').classList.add('active');
+          }
+        })
+        .catch(() => {});
+    }
+  });
+</script>
+
+<script src="script.js"></script>
 </body>
 </html>

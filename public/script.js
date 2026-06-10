@@ -17,6 +17,10 @@ if (darkBtn) {
   });
 }
 
+const apiBaseUrl = window.location.protocol.startsWith('http')
+  ? window.location.origin
+  : 'http://localhost:5000';
+
 const bookingForm = document.querySelector(".booking-form");
 
 if (bookingForm) {
@@ -129,7 +133,7 @@ if (proceedPaymentBtn) {
     registerMessage.innerHTML = "Saving registration details & uploading photo... Please wait.";
 
     try {
-      const response = await fetch("/api/students/register", {
+      const response = await fetch(`${apiBaseUrl}/api/students/register`, {
         method: "POST",
         body: formData
       });
@@ -179,7 +183,7 @@ if (paidBtn) {
     formData.append("paymentScreenshot", screenshotInput.files[0]);
 
     try {
-      const response = await fetch(`/api/students/${studentDbId}/upload-payment`, {
+      const response = await fetch(`${apiBaseUrl}/api/students/${studentDbId}/upload-payment`, {
         method: "POST",
         body: formData
       });

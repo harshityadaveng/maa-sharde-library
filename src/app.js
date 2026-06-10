@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
-app.use('/api/payments', paymentRoutes);
+app.use('/api/payments', paymentRoutes);  // Full QR payment system routes
 app.use('/api/seats', seatRoutes);
 
 // Fallback to index.html for undefined routes (supporting SPA routing if needed)
