@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Register - Maa Sharde Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .form-group-title {
+      text-align: left;
+      font-weight: bold;
+      color: #0a192f;
+      margin: 25px 0 15px 0;
+      border-bottom: 2px solid #f5c542;
+      padding-bottom: 5px;
+      font-size: 16px;
+    }
+    body.dark-mode .form-group-title {
+      color: #f5c542;
+      border-bottom-color: #333;
+    }
+    .register-box {
+      max-width: 650px;
+      margin: 20px auto;
+    }
+    .field-label {
+      display: block;
+      text-align: left;
+      font-size: 12px;
+      margin-bottom: 5px;
+      padding-left: 5px;
+      color: #555;
+      font-weight: 600;
+    }
+    body.dark-mode .field-label {
+      color: #ccc;
+    }
+    input[type="file"] {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: white;
+    }
+    body.dark-mode input[type="file"] {
+      background: #222;
+      border-color: #444;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<section class="register-page">
+  <div class="register-box">
+    <h1>Student Registration</h1>
+    <p>Register your seat at Maa Sharde Library</p>
+
+    <form id="studentRegisterForm" enctype="multipart/form-data">
+      
+      <!-- Personal Details -->
+      <div class="form-group-title">Personal Details</div>
+      <input type="text" id="studentName" placeholder="Full Name *" required>
+      <input type="text" id="studentFatherName" placeholder="Father's Name *" required>
+      <input type="text" id="studentMotherName" placeholder="Mother's Name *" required>
+      
+      <select id="studentGender" required>
+        <option value="">Select Gender *</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+      
+      <label for="studentDob" class="field-label">Date of Birth *</label>
+      <input type="date" id="studentDob" required>
+      
+      <input type="tel" id="studentPhone" placeholder="Mobile Number *" required>
+      <input type="tel" id="studentAltPhone" placeholder="Alternate Mobile Number">
+      <input type="email" id="studentEmail" placeholder="Email Address *" required>
+      <input type="text" id="studentAadhaar" placeholder="Aadhaar Number (Optional)">
+      
+      <label for="studentPhoto" class="field-label">Upload Student Photo (JPG/PNG) *</label>
+      <input type="file" id="studentPhoto" accept="image/*" required>
+
+      <!-- Address Details -->
+      <div class="form-group-title">Address Details</div>
+      <input type="text" id="studentState" placeholder="State *" required>
+      <input type="text" id="studentDistrict" placeholder="District *" required>
+      <input type="text" id="studentCity" placeholder="City *" required>
+      <input type="text" id="studentAddress" placeholder="Full Address *" required>
+      <input type="text" id="studentPincode" placeholder="Pincode *" required>
+
+      <!-- Library Details -->
+      <div class="form-group-title">Library Details</div>
+      <select id="studentPlan" required>
+        <option value="">Select Membership Plan *</option>
+        <option value="Daily Pass">Daily Pass</option>
+        <option value="Monthly Plan">Monthly Plan</option>
+        <option value="Quarterly Plan">Quarterly Plan</option>
+        <option value="Yearly Plan">Yearly Plan</option>
+      </select>
+      
+      <label for="studentJoiningDate" class="field-label">Joining Date *</label>
+      <input type="date" id="studentJoiningDate" required>
+      
+      <select id="studentShift" required>
+        <option value="">Select Preferred Timing/Shift *</option>
+        <option value="Morning Shift">Morning Shift</option>
+        <option value="Afternoon Shift">Afternoon Shift</option>
+        <option value="Evening Shift">Evening Shift</option>
+        <option value="Full Day">Full Day</option>
+      </select>
+
+      <!-- Proceed Button -->
+      <button type="button" id="proceedPaymentBtn">
+        Proceed To Payment
+      </button>
+
+      <!-- Step 2: Payment Verification (Hidden Initially) -->
+      <div id="paymentBox" class="payment-box">
+        <h3>Scan & Pay</h3>
+        <img src="images/payment-qr.png" class="qr-code" alt="Payment QR Code">
+        <p>After payment, upload screenshot for verification.</p>
+        <input type="file" id="paymentScreenshot" accept="image/*">
+        <button type="button" id="paidBtn">
+          Verify Payment Details
+        </button>
+      </div>
+
+      <!-- Step 3: Complete Button (Hidden Initially) -->
+      <button type="submit" id="submitBtn">
+        Complete Registration
+      </button>
+
+      <p id="registerMessage" style="margin-top: 15px; font-weight: bold;"></p>
+    </form>
+    
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
