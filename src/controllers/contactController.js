@@ -8,6 +8,22 @@ const createContactMessage = async (req, res, next) => {
       throw new Error('Name, email and message are required.');
     }
 
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      res.status(400);
+      throw new Error('Invalid email format.');
+    }
+
+    // Phone format validation (optional, but must be valid if provided)
+    if (phone && phone.trim() !== '') {
+      const phoneRegex = /^[0-9]{10}$/;
+      if (!phoneRegex.test(phone.trim())) {
+        res.status(400);
+        throw new Error('Mobile number must be exactly 10 digits.');
+      }
+    }
+
     const contact = await ContactMessage.create({
       name: name.trim(),
       email: email.trim().toLowerCase(),
@@ -37,7 +53,7 @@ const deleteContactMessage = async (req, res, next) => {
       res.status(404);
       throw new Error('Contact message not found');
     }
-    await contact.remove();
+    await ContactMessage.findByIdAndDelete(contact._id);
     res.json({ message: 'Contact message deleted successfully.' });
   } catch (error) {
     next(error);

@@ -37,7 +37,7 @@
       font-size: 15px;
       outline: none;
     }
-    .admin-card button {
+    .admin-card button.btn-login {
       width: 100%;
       padding: 14px 18px;
       border: none;
@@ -48,7 +48,7 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .admin-card button:hover { background: #f5a800; }
+    .admin-card button.btn-login:hover { background: #f5a800; }
     .admin-login-footer {
       margin-top: 18px;
       font-size: 14px;
@@ -64,6 +64,47 @@
       margin-bottom: 10px;
       font-weight: 600;
     }
+    .password-container {
+      position: relative;
+      width: 100%;
+      margin-bottom: 18px;
+    }
+    .password-container input {
+      width: 100%;
+      padding-right: 60px;
+      margin-bottom: 0;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: bold;
+      outline: none;
+      padding: 0;
+    }
+    .toggle-password:hover {
+      color: #0a192f;
+    }
+    .forgot-link {
+      display: block;
+      margin-top: -6px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      color: #6b7280;
+      text-decoration: none;
+      text-align: right;
+      font-weight: 500;
+    }
+    .forgot-link:hover {
+      color: #0a192f;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -73,11 +114,15 @@
     <p class="admin-message" id="adminLoginMessage"></p>
     <form id="adminLoginForm">
       <input id="adminEmail" type="email" placeholder="Email Address" required />
-      <input id="adminPassword" type="password" placeholder="Password" required />
-      <button type="submit">Login to Dashboard</button>
+      <div class="password-container">
+        <input id="adminPassword" type="password" placeholder="Password" required />
+        <button type="button" class="toggle-password" id="togglePasswordBtn">Show</button>
+      </div>
+      <a href="#" class="forgot-link" id="forgotPasswordLink">Forgot Password?</a>
+      <button type="submit" class="btn-login">Login to Dashboard</button>
     </form>
     <p class="admin-login-footer">
-      <a href="index.html">Back to Website</a>
+      <a href="/">Back to Website</a>
     </p>
   </div>
 </section>

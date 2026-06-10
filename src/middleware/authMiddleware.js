@@ -22,6 +22,11 @@ const protect = async (req, res, next) => {
       req.user = await User.findById(decoded.id).select('-password');
 
       if (!req.user) {
+        const Admin = require('../models/Admin');
+        req.user = await Admin.findById(decoded.id).select('-password');
+      }
+
+      if (!req.user) {
         return res.status(401).json({ message: 'Not authorized, user not found' });
       }
 

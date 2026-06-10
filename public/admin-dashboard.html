@@ -6,10 +6,97 @@
   <title>Admin Dashboard - Maa Sharde Library</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    .admin-dashboard-page {
-      padding: 26px 20px 60px;
+    body {
+      margin: 0;
       background: #f8f9fb;
+    }
+    .admin-container {
+      display: flex;
       min-height: 100vh;
+    }
+    .admin-sidebar {
+      width: 260px;
+      background: #0a192f;
+      color: white;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+    .admin-sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .admin-sidebar-logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      padding: 2px;
+    }
+    .admin-sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+    .admin-sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: #e5e7eb;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      border-radius: 12px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .admin-sidebar-menu li a:hover,
+    .admin-sidebar-menu li.active a {
+      background: #f5c542;
+      color: #0a192f;
+    }
+    .admin-content {
+      flex-grow: 1;
+      margin-left: 260px;
+      padding: 40px;
+      background: #f8f9fb;
+      transition: all 0.3s ease;
+      width: calc(100% - 260px);
+    }
+    .mobile-header {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      background: #0a192f;
+      color: white;
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+    .mobile-sidebar-toggle {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
     }
     .admin-header {
       display: flex;
@@ -41,7 +128,7 @@
     .admin-btn:hover { background: #f5a800; }
     .dashboard-stats {
       display: grid;
-      grid-template-columns: repeat(5, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 18px;
       margin-bottom: 30px;
     }
@@ -59,6 +146,10 @@
       border-radius: 24px;
       box-shadow: 0 16px 50px rgba(0,0,0,0.07);
       margin-bottom: 28px;
+      display: none; /* Controlled by JS switcher */
+    }
+    .dashboard-section.active {
+      display: block;
     }
     .dashboard-section h2 {
       margin-top: 0;
@@ -120,94 +211,165 @@
     }
     .admin-search-row input,
     .admin-search-row select { min-width: 160px; }
-    @media (max-width: 1100px) {
-      .dashboard-stats { grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+    
+    @media (max-width: 900px) {
+      .admin-sidebar {
+        left: -260px;
+      }
+      .admin-sidebar.active {
+        left: 0;
+      }
+      .admin-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+      }
+      .mobile-header {
+        display: flex;
+      }
     }
     @media (max-width: 700px) {
-      .dashboard-stats { grid-template-columns: 1fr; }
       .admin-form-row, .admin-search-row { flex-direction: column; }
       .table-actions button { width: 100%; }
     }
   </style>
 </head>
 <body>
-<section class="admin-dashboard-page" id="adminDashboardApp">
-  <div class="admin-header">
-    <div>
-      <h1>Admin Dashboard</h1>
-      <p id="adminStatusText" style="color:#475569; margin:6px 0 0; font-size:14px;"></p>
-    </div>
-    <div class="admin-dashboard-controls">
-      <button class="admin-btn" id="refreshDashboardBtn">Refresh</button>
-      <button class="admin-btn" id="logoutBtn">Logout</button>
-    </div>
-  </div>
 
-  <div class="dashboard-stats" id="dashboardStats"></div>
+<div class="admin-container" id="adminDashboardApp">
+  <!-- Sidebar Navigation -->
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-sidebar-logo">
+      <img src="images/logo.png" alt="Logo" onerror="this.src='/images/logo.png'">
+      <span>Maa Sharde Library</span>
+    </div>
+    <ul class="admin-sidebar-menu">
+      <li class="menu-item active" data-target="overviewSection"><a onclick="switchTab('overviewSection')">Dashboard</a></li>
+      <li class="menu-item" data-target="studentManagementSection" data-filter="all"><a onclick="switchTab('studentManagementSection')">Students</a></li>
+      <li class="menu-item" data-target="studentManagementSection" data-filter="pending"><a onclick="switchTab('studentManagementSection', 'pending')">Admissions</a></li>
+      <li class="menu-item" data-target="paymentManagementSection"><a onclick="switchTab('paymentManagementSection')">Payments</a></li>
+      <li class="menu-item" data-target="planManagementSection"><a onclick="switchTab('planManagementSection')">Membership Plans</a></li>
+      <li class="menu-item" data-target="contactManagementSection"><a onclick="switchTab('contactManagementSection')">Contact Messages</a></li>
+      <li class="menu-item" data-target="settingsSection"><a onclick="switchTab('settingsSection')">Settings</a></li>
+      <li class="menu-item" style="margin-top: 20px;"><a id="logoutBtn">Logout</a></li>
+    </ul>
+  </aside>
 
-  <div class="dashboard-section" id="studentManagementSection">
-    <h2>Student Management</h2>
-    <div class="admin-search-row">
-      <input type="text" id="studentSearchInput" placeholder="Search by name, email, mobile, ID" />
-      <select id="studentAdmissionFilter">
-        <option value="">All Admissions</option>
-        <option value="pending">Pending</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
-      </select>
-      <select id="studentPaymentFilter">
-        <option value="">All Payments</option>
-        <option value="pending">Pending</option>
-        <option value="verified">Verified</option>
-        <option value="failed">Failed</option>
-      </select>
-      <input type="text" id="studentPlanFilter" placeholder="Plan filter" />
-      <button class="admin-btn" id="studentFilterBtn">Filter</button>
+  <!-- Main Content Panel -->
+  <main class="admin-content">
+    <div class="mobile-header">
+      <span>Maa Sharde Admin</span>
+      <button class="mobile-sidebar-toggle" id="sidebarToggle">☰</button>
     </div>
-    <div style="overflow-x:auto;">
-      <table class="admin-table" id="studentsTable"></table>
-    </div>
-  </div>
 
-  <div class="dashboard-section" id="paymentManagementSection">
-    <h2>Payment Requests</h2>
-    <div class="admin-search-row">
-      <input type="text" id="paymentSearchInput" placeholder="Search by payment ID" />
-      <select id="paymentStatusFilter">
-        <option value="">All Statuses</option>
-        <option value="pending">Pending</option>
-        <option value="under_verification">Under Verification</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
-      </select>
-      <button class="admin-btn" id="paymentFilterBtn">Filter</button>
+    <div class="admin-header">
+      <div>
+        <h1 id="dashboardTitle">Dashboard Overview</h1>
+        <p id="adminStatusText" style="color:#475569; margin:6px 0 0; font-size:14px;">Loading...</p>
+      </div>
+      <div class="admin-dashboard-controls">
+        <button class="admin-btn" id="refreshDashboardBtn">Refresh</button>
+      </div>
     </div>
-    <div style="overflow-x:auto;">
-      <table class="admin-table" id="paymentsTable"></table>
-    </div>
-  </div>
 
-  <div class="dashboard-section" id="planManagementSection">
-    <h2>Membership Plans</h2>
-    <form id="addPlanForm" class="admin-form-row">
-      <input id="planTitle" placeholder="Plan Title" required />
-      <input id="planPrice" type="number" min="0" placeholder="Price" required />
-      <input id="planDuration" placeholder="Duration (e.g. Monthly)" required />
-      <textarea id="planDescription" placeholder="Description"></textarea>
-      <button class="admin-btn" type="submit">Add Plan</button>
-    </form>
-    <div style="overflow-x:auto;">
-      <table class="admin-table" id="plansTable"></table>
+    <!-- 1. Overview Section -->
+    <div class="dashboard-section active" id="overviewSection">
+      <h2>Key Statistics</h2>
+      <div class="dashboard-stats" id="dashboardStats">
+        <!-- Rendered by JS -->
+      </div>
     </div>
-  </div>
 
-  <div class="dashboard-section" id="contactManagementSection">
-    <h2>Contact Messages</h2>
-    <div style="overflow-x:auto;">
-      <table class="admin-table" id="contactsTable"></table>
+    <!-- 2. Student Management -->
+    <div class="dashboard-section" id="studentManagementSection">
+      <h2>Student Management</h2>
+      <div class="admin-search-row">
+        <input type="text" id="studentSearchInput" placeholder="Search by name, email, mobile, ID" />
+        <select id="studentAdmissionFilter">
+          <option value="">All Admissions</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+        <select id="studentPaymentFilter">
+          <option value="">All Payments</option>
+          <option value="pending">Pending</option>
+          <option value="verified">Verified</option>
+          <option value="failed">Failed</option>
+        </select>
+        <input type="text" id="studentPlanFilter" placeholder="Plan filter" />
+        <button class="admin-btn" id="studentFilterBtn">Filter</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table" id="studentsTable"></table>
+      </div>
     </div>
-  </div>
-</section>
+
+    <!-- 3. Payment Requests -->
+    <div class="dashboard-section" id="paymentManagementSection">
+      <h2>Payment Requests</h2>
+      <div class="admin-search-row">
+        <input type="text" id="paymentSearchInput" placeholder="Search by payment ID" />
+        <select id="paymentStatusFilter">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="under_verification">Under Verification</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+        <button class="admin-btn" id="paymentFilterBtn">Filter</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table" id="paymentsTable"></table>
+      </div>
+    </div>
+
+    <!-- 4. Membership Plan Management -->
+    <div class="dashboard-section" id="planManagementSection">
+      <h2>Membership Plans</h2>
+      <form id="addPlanForm" class="admin-form-row">
+        <input id="planTitle" placeholder="Plan Title" required />
+        <input id="planPrice" type="number" min="0" placeholder="Price" required />
+        <input id="planDuration" placeholder="Duration (e.g. Monthly)" required />
+        <textarea id="planDescription" placeholder="Description"></textarea>
+        <button class="admin-btn" type="submit">Add Plan</button>
+      </form>
+      <div style="overflow-x:auto;">
+        <table class="admin-table" id="plansTable"></table>
+      </div>
+    </div>
+
+    <!-- 5. Contact Messages -->
+    <div class="dashboard-section" id="contactManagementSection">
+      <h2>Contact Messages</h2>
+      <div style="overflow-x:auto;">
+        <table class="admin-table" id="contactsTable"></table>
+      </div>
+    </div>
+
+    <!-- 6. Settings Section -->
+    <div class="dashboard-section" id="settingsSection">
+      <h2>Admin Settings</h2>
+      <div style="max-width: 480px; background: white; padding: 25px; border-radius: 18px; border: 1px solid #e2e8f0;">
+        <h3 style="margin-top: 0; margin-bottom: 18px; color: #0a192f;">Change Password</h3>
+        <form id="changePasswordForm">
+          <div class="admin-form-row" style="margin-bottom: 12px;">
+            <input type="password" id="currentPassword" placeholder="Current Password" required style="width: 100%;" />
+          </div>
+          <div class="admin-form-row" style="margin-bottom: 12px;">
+            <input type="password" id="newPassword" placeholder="New Password (min 6 chars)" required style="width: 100%;" />
+          </div>
+          <div class="admin-form-row" style="margin-bottom: 18px;">
+            <input type="password" id="confirmNewPassword" placeholder="Confirm New Password" required style="width: 100%;" />
+          </div>
+          <button class="admin-btn" type="submit" style="width: 100%;">Update Password</button>
+        </form>
+        <p id="settingsMessage" style="margin-top: 15px; font-weight: bold; font-size: 14px; text-align: center;"></p>
+      </div>
+    </div>
+  </main>
+</div>
+
 <script src="admin.js"></script>
 </body>
 </html>

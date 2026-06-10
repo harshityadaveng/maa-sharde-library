@@ -44,24 +44,47 @@ async function loadMembershipPlans() {
   }
 }
 
-const bookingForm = document.querySelector(".booking-form");
+const contactForm = document.getElementById("contactForm");
 
-if (bookingForm) {
-  bookingForm.addEventListener("submit", function (e) {
+if (contactForm) {
+  contactForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const name = document.getElementById("name").value;
-    const phone = document.getElementById("phone").value;
-    const plan = document.getElementById("plan").value;
-    const message = document.getElementById("formMessage");
+    const name = document.getElementById("contactName").value.trim();
+    const phone = document.getElementById("contactMobile").value.trim();
+    const email = document.getElementById("contactEmail").value.trim();
+    const message = document.getElementById("contactMessage").value.trim();
+    const statusMsg = document.getElementById("contactFormMessage");
 
-    if (name === "" || phone === "" || plan === "") {
-      message.style.color = "red";
-      message.innerHTML = "Please fill all details.";
-    } else {
-      message.style.color = "green";
-      message.innerHTML = "Thank you! We will contact you soon.";
-      bookingForm.reset();
+    if (!name || !email || !message) {
+      statusMsg.style.color = "red";
+      statusMsg.innerHTML = "Please fill in all required fields (*).";
+      return;
+    }
+
+    statusMsg.style.color = "orange";
+    statusMsg.innerHTML = "Sending message... Please wait.";
+
+    try {
+      const response = await fetch(`${apiBaseUrl}/api/contacts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, phone, email, message }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to send message.");
+      }
+
+      statusMsg.style.color = "green";
+      statusMsg.innerHTML = "Message sent successfully! We will contact you soon.";
+      contactForm.reset();
+    } catch (error) {
+      statusMsg.style.color = "red";
+      statusMsg.innerHTML = error.message || "Something went wrong. Please try again.";
     }
   });
 }

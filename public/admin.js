@@ -35,8 +35,19 @@ const initAdminLogin = () => {
   if (!loginForm) return;
 
   if (getAdminToken()) {
-    window.location.href = 'admin-dashboard.html';
+    window.location.href = '/admin/dashboard';
     return;
+  }
+
+  // Show/Hide password toggle logic
+  const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+  const passwordInput = document.getElementById('adminPassword');
+  if (togglePasswordBtn && passwordInput) {
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.getAttribute('type') === 'password';
+      passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+      togglePasswordBtn.textContent = isPassword ? 'Hide' : 'Show';
+    });
   }
 
   const messageEl = document.getElementById('adminLoginMessage');
@@ -55,7 +66,7 @@ const initAdminLogin = () => {
     messageEl.style.color = '#0a192f';
 
     try {
-      const data = await fetch(`${apiBaseUrl}/api/auth/login`, {
+      const data = await fetch(`${apiBaseUrl}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -74,7 +85,7 @@ const initAdminLogin = () => {
       }
 
       setAdminToken(data.token);
-      window.location.href = 'admin-dashboard.html';
+      window.location.href = '/admin/dashboard';
     } catch (error) {
       messageEl.textContent = error.message;
       messageEl.style.color = 'red';
@@ -90,22 +101,88 @@ const initAdminDashboard = () => {
   const refreshBtn = document.getElementById('refreshDashboardBtn');
   const statusText = document.getElementById('adminStatusText');
 
+  // Verify Auth
   const verifyToken = async () => {
     try {
-      await fetchWithAuth('/api/auth/me');
+      await fetchWithAuth('/api/admin/profile');
     } catch (error) {
       clearAdminToken();
-      window.location.href = 'admin-login.html';
+      window.location.href = '/admin/login';
     }
   };
 
+  // Switch SPA section tab
+  window.switchTab = (sectionId, filterType = '') => {
+    // Hide all sections
+    const sections = document.querySelectorAll('.dashboard-section');
+    sections.forEach(s => s.classList.remove('active'));
+
+    // Show selected section
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+      activeSection.classList.add('active');
+    }
+
+    // Set active link in sidebar menu
+    const menuItems = document.querySelectorAll('.admin-sidebar-menu li');
+    menuItems.forEach(item => {
+      item.classList.remove('active');
+      const target = item.getAttribute('data-target');
+      const filter = item.getAttribute('data-filter');
+      if (target === sectionId) {
+        if (filterType && filter === filterType) {
+          item.classList.add('active');
+        } else if (!filterType && !filter) {
+          item.classList.add('active');
+        } else if (!filterType && filter === 'all') {
+          item.classList.add('active');
+        }
+      }
+    });
+
+    // Update Title text
+    const titleEl = document.getElementById('dashboardTitle');
+    if (titleEl) {
+      if (sectionId === 'overviewSection') titleEl.textContent = 'Dashboard Overview';
+      else if (sectionId === 'studentManagementSection' && filterType === 'pending') titleEl.textContent = 'Admission Verification';
+      else if (sectionId === 'studentManagementSection') titleEl.textContent = 'Student Management';
+      else if (sectionId === 'paymentManagementSection') titleEl.textContent = 'Payment Management';
+      else if (sectionId === 'planManagementSection') titleEl.textContent = 'Membership Plans';
+      else if (sectionId === 'contactManagementSection') titleEl.textContent = 'Contact Messages';
+      else if (sectionId === 'settingsSection') titleEl.textContent = 'Admin Settings';
+    }
+
+    // Auto-filter logic for admissions
+    if (sectionId === 'studentManagementSection') {
+      const admissionFilter = document.getElementById('studentAdmissionFilter');
+      if (admissionFilter) {
+        admissionFilter.value = filterType === 'pending' ? 'pending' : '';
+      }
+      loadStudents();
+    }
+
+    // Close mobile sidebar if open
+    const sidebar = document.getElementById('adminSidebar');
+    if (sidebar) sidebar.classList.remove('active');
+  };
+
+  // Toggle Sidebar on Mobile
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('adminSidebar');
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+  }
+
+  // Render stats
   const renderStats = (stats) => {
     const statsEl = document.getElementById('dashboardStats');
     statsEl.innerHTML = `
       <div class="stat-card"><h3>Total Students</h3><p>${stats.totalStudents}</p></div>
-      <div class="stat-card"><h3>Active Students</h3><p>${stats.activeStudents}</p></div>
+      <div class="stat-card"><h3>Approved Admissions</h3><p>${stats.approvedAdmissions}</p></div>
       <div class="stat-card"><h3>Pending Admissions</h3><p>${stats.pendingAdmissions}</p></div>
-      <div class="stat-card"><h3>Paid Students</h3><p>${stats.paidStudents}</p></div>
+      <div class="stat-card"><h3>Pending Payments</h3><p>${stats.pendingPayments}</p></div>
       <div class="stat-card"><h3>Total Revenue</h3><p>₹${stats.totalRevenue.toLocaleString()}</p></div>
     `;
   };
@@ -134,13 +211,13 @@ const initAdminDashboard = () => {
         ${students
           .map((student) => `
             <tr>
-              <td>${student.studentId || '-'}</td>
-              <td>${student.name}</td>
-              <td>${student.email}</td>
-              <td>${student.mobile}</td>
-              <td>${student.plan}</td>
-              <td>${student.admissionStatus}</td>
-              <td>${student.paymentStatus}</td>
+              <td>${escapeHtml(student.studentId || '-')}</td>
+              <td>${escapeHtml(student.name)}</td>
+              <td>${escapeHtml(student.email)}</td>
+              <td>${escapeHtml(student.mobile)}</td>
+              <td>${escapeHtml(student.plan)}</td>
+              <td>${escapeHtml(student.admissionStatus)}</td>
+              <td>${escapeHtml(student.paymentStatus)}</td>
               <td class="table-actions">
                 <button class="btn-edit" onclick="editStudent('${student._id}')">Edit</button>
                 <button class="btn-approve" onclick="setAdmissionStatus('${student._id}','approved')">Approve</button>
@@ -177,12 +254,17 @@ const initAdminDashboard = () => {
         ${payments
           .map((payment) => `
             <tr>
-              <td>${payment.paymentId}</td>
-              <td>${payment.studentId?.name || 'Unknown'}</td>
+              <td>${escapeHtml(payment.paymentId)}</td>
+              <td>${escapeHtml(payment.studentId?.name || 'Unknown')}</td>
               <td>₹${payment.amount}</td>
-              <td>${payment.paymentStatus}</td>
-              <td><a class="btn-view" target="_blank" href="${payment.paymentScreenshot}">View</a></td>
-              <td>${payment.adminRemarks || '-'}</td>
+              <td>${escapeHtml(payment.paymentStatus)}</td>
+              <td>
+                ${payment.paymentScreenshot 
+                  ? `<a class="btn-view" target="_blank" href="${payment.paymentScreenshot}">View</a>` 
+                  : `No Screenshot`
+                }
+              </td>
+              <td>${escapeHtml(payment.adminRemarks || '-')}</td>
               <td class="table-actions">
                 <button class="btn-approve" onclick="approvePayment('${payment._id}')">Approve</button>
                 <button class="btn-reject" onclick="rejectPayment('${payment._id}')">Reject</button>
@@ -253,10 +335,10 @@ const initAdminDashboard = () => {
         ${contacts
           .map((message) => `
             <tr>
-              <td>${message.name}</td>
-              <td>${message.email}</td>
-              <td>${message.phone || '-'}</td>
-              <td>${message.message}</td>
+              <td>${escapeHtml(message.name)}</td>
+              <td>${escapeHtml(message.email)}</td>
+              <td>${escapeHtml(message.phone || '-')}</td>
+              <td>${escapeHtml(message.message)}</td>
               <td>${new Date(message.createdAt).toLocaleString()}</td>
               <td class="table-actions">
                 <button class="btn-delete" onclick="deleteContact('${message._id}')">Delete</button>
@@ -471,11 +553,28 @@ const initAdminDashboard = () => {
     statusText.textContent = 'Logged in as admin';
     statusText.style.color = '#475569';
     await Promise.all([loadOverview(), loadStudents(), loadPayments(), loadPlans(), loadContacts()]);
+
+    // Handle initial route check
+    const path = window.location.pathname;
+    if (path.includes('/admin/students')) {
+      window.switchTab('studentManagementSection');
+    } else if (path.includes('/admin/admissions')) {
+      window.switchTab('studentManagementSection', 'pending');
+    } else if (path.includes('/admin/payments')) {
+      window.switchTab('paymentManagementSection');
+    } else {
+      window.switchTab('overviewSection');
+    }
   };
 
-  logoutBtn.addEventListener('click', () => {
+  logoutBtn.addEventListener('click', async () => {
+    try {
+      await fetchWithAuth('/api/admin/logout', { method: 'POST' });
+    } catch (err) {
+      console.error('Logout error response:', err);
+    }
     clearAdminToken();
-    window.location.href = 'admin-login.html';
+    window.location.href = '/admin/login';
   });
 
   refreshBtn.addEventListener('click', async () => {
@@ -520,6 +619,46 @@ const initAdminDashboard = () => {
       statusText.style.color = 'red';
     }
   });
+
+  // Settings Change Password Handler
+  const changePasswordForm = document.getElementById('changePasswordForm');
+  const settingsMsg = document.getElementById('settingsMessage');
+  if (changePasswordForm && settingsMsg) {
+    changePasswordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+      if (newPassword.length < 6) {
+        settingsMsg.style.color = 'red';
+        settingsMsg.textContent = 'New password must be at least 6 characters long.';
+        return;
+      }
+
+      if (newPassword !== confirmNewPassword) {
+        settingsMsg.style.color = 'red';
+        settingsMsg.textContent = 'New passwords do not match.';
+        return;
+      }
+
+      settingsMsg.style.color = '#0a192f';
+      settingsMsg.textContent = 'Updating password...';
+
+      try {
+        await fetchWithAuth('/api/admin/settings/password', {
+          method: 'PUT',
+          body: JSON.stringify({ currentPassword, newPassword }),
+        });
+        settingsMsg.style.color = 'green';
+        settingsMsg.textContent = 'Password updated successfully!';
+        changePasswordForm.reset();
+      } catch (err) {
+        settingsMsg.style.color = 'red';
+        settingsMsg.textContent = err.message;
+      }
+    });
+  }
 
   initialize();
 };

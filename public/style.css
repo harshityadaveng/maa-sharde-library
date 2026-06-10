@@ -1291,3 +1291,35 @@ body.dark-mode .payment-box p {
   color: #f5a800;
   font-weight: bold;
 }
+
+/* Form inputs styling for Textarea & Dark mode inputs */
+.booking-form textarea,
+.register-box textarea {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: inherit;
+  resize: vertical;
+  outline: none;
+}
+
+body.dark-mode .booking-form input,
+body.dark-mode .booking-form select,
+body.dark-mode .booking-form textarea,
+body.dark-mode .register-box input,
+body.dark-mode .register-box select,
+body.dark-mode .register-box textarea {
+  background: #1a1a1a;
+  color: white;
+  border-color: #333;
+}
+
+body.dark-mode .booking-form input::placeholder,
+body.dark-mode .booking-form textarea::placeholder,
+body.dark-mode .register-box input::placeholder,
+body.dark-mode .register-box textarea::placeholder {
+  color: #888;
+}

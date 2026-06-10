@@ -352,23 +352,17 @@
 
       </div>
 
-      <div class="admission-card">
-        <h3>Want to Get Admission?</h3>
-        <h3>If you have any Doubts</h3>
-
-        <p>
-          Please visit Maa Sharde Digital Library physically for admission,
-          seat availability, fee details and complete registration process.
-        </p>
-
-        <div class="admission-points">
-          <span>📍 Visit Library</span>
-          <span>🪑 Check Seat Availability</span>
-          <span>💳 Confirm Fees</span>
-          <span>✅ Complete Admission</span>
-        </div>
-
-        <a href="#location" class="admission-btn">View Location</a>
+      <div class="booking-form" id="contactFormContainer">
+        <h3>Send Us a Message</h3>
+        <p style="margin-bottom: 20px; color: #555;">Have any questions or doubts? Fill out the form below and we will get back to you.</p>
+        <form id="contactForm">
+          <input type="text" id="contactName" placeholder="Full Name *" required />
+          <input type="tel" id="contactMobile" placeholder="Mobile Number" />
+          <input type="email" id="contactEmail" placeholder="Email Address *" required />
+          <textarea id="contactMessage" placeholder="Your Message *" required style="width: 100%; height: 100px; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; resize: vertical; outline: none; font-family: inherit; font-size: inherit;"></textarea>
+          <button type="submit" id="contactSubmitBtn">Submit Message</button>
+        </form>
+        <p id="contactFormMessage" style="margin-top: 15px; font-weight: bold; text-align: center;"></p>
       </div>
     </div>
   </section>

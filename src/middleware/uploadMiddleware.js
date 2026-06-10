@@ -2,16 +2,31 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure uploads directory exists
+// Ensure uploads directory and its subdirectories exist
 const uploadDir = path.join(__dirname, '../../uploads');
+const subfolders = ['students', 'payments', 'documents'];
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Configure storage
+subfolders.forEach((sub) => {
+  const subpath = path.join(uploadDir, sub);
+  if (!fs.existsSync(subpath)) {
+    fs.mkdirSync(subpath, { recursive: true });
+  }
+});
+
+// Configure storage with dynamic subdirectories
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, uploadDir);
+    let subfolder = 'documents';
+    if (file.fieldname === 'studentPhoto') {
+      subfolder = 'students';
+    } else if (file.fieldname === 'paymentScreenshot') {
+      subfolder = 'payments';
+    }
+    cb(null, path.join(uploadDir, subfolder));
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -43,3 +58,4 @@ const upload = multer({
 });
 
 module.exports = upload;
+

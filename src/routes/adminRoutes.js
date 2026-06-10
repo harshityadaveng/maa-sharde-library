@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { protect, admin } = require('../middleware/authMiddleware');
 const {
+  adminLogin,
+  adminProfile,
+  adminLogout,
+  changePassword,
   getAdminOverview,
   getStudents,
   getStudentById,
@@ -12,6 +16,7 @@ const {
   approvePayment,
   rejectPayment,
   getPlans,
+  getPlanById,
   createPlan,
   updatePlan,
   deletePlan,
@@ -19,7 +24,15 @@ const {
   deleteContact,
 } = require('../controllers/adminController');
 
+// Public routes
+router.post('/login', adminLogin);
+
+// Protected routes
 router.use(protect, admin);
+
+router.get('/profile', adminProfile);
+router.post('/logout', adminLogout);
+router.put('/settings/password', changePassword);
 
 // Dashboard overview
 router.get('/overview', getAdminOverview);

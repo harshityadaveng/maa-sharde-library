@@ -6,10 +6,9 @@ const ContactMessage = require('../models/ContactMessage');
 const getAdminOverview = async (req, res, next) => {
   try {
     const totalStudents = await Student.countDocuments({});
-    const activeStudents = await Student.countDocuments({ admissionStatus: 'approved' });
+    const approvedAdmissions = await Student.countDocuments({ admissionStatus: 'approved' });
     const pendingAdmissions = await Student.countDocuments({ admissionStatus: 'pending' });
-    const paidStudents = await Payment.countDocuments({ paymentStatus: 'approved' });
-    const pendingPayments = await Payment.countDocuments({ paymentStatus: 'under_verification' });
+    const pendingPayments = await Payment.countDocuments({ paymentStatus: { $in: ['pending', 'under_verification'] } });
 
     const revenueResult = await Payment.aggregate([
       { $match: { paymentStatus: 'approved' } },
@@ -18,9 +17,8 @@ const getAdminOverview = async (req, res, next) => {
 
     res.json({
       totalStudents,
-      activeStudents,
+      approvedAdmissions,
       pendingAdmissions,
-      paidStudents,
       pendingPayments,
       totalRevenue: revenueResult[0]?.totalRevenue || 0,
     });
@@ -133,7 +131,7 @@ const deleteStudent = async (req, res, next) => {
     }
 
     await Payment.deleteMany({ studentId: student._id });
-    await student.remove();
+    await Student.findByIdAndDelete(student._id);
 
     res.json({ message: 'Student and related payments removed successfully.' });
   } catch (error) {
@@ -318,7 +316,7 @@ const deletePlan = async (req, res, next) => {
       res.status(404);
       throw new Error('Plan not found');
     }
-    await plan.remove();
+    await Plan.findByIdAndDelete(plan._id);
     res.json({ message: 'Plan removed successfully.' });
   } catch (error) {
     next(error);
@@ -341,8 +339,122 @@ const deleteContact = async (req, res, next) => {
       res.status(404);
       throw new Error('Contact message not found');
     }
-    await contact.remove();
+    await ContactMessage.findByIdAndDelete(contact._id);
     res.json({ message: 'Contact message deleted successfully.' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const jwt = require('jsonwebtoken');
+const Admin = require('../models/Admin');
+const User = require('../models/User');
+
+const adminLogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      res.status(400);
+      throw new Error('Please enter email and password');
+    }
+
+    const emailClean = email.trim().toLowerCase();
+
+    // 1. Search in Admin collection
+    let adminUser = await Admin.findOne({ email: emailClean });
+    
+    // 2. Search in User collection with role 'admin'
+    if (!adminUser) {
+      adminUser = await User.findOne({ email: emailClean, role: 'admin' });
+    }
+
+    // 3. Fallback direct Env check
+    const envEmail = process.env.ADMIN_EMAIL || 'admin@gmail.com';
+    const envPassword = process.env.ADMIN_PASSWORD || 'Admin@123';
+
+    if (!adminUser && emailClean === envEmail.toLowerCase() && password === envPassword) {
+      adminUser = await Admin.create({
+        name: 'System Admin',
+        email: envEmail.toLowerCase(),
+        password: envPassword,
+      });
+    }
+
+    if (adminUser && (await adminUser.matchPassword(password))) {
+      const token = jwt.sign(
+        { id: adminUser._id },
+        process.env.JWT_SECRET || 'super_secret_jwt_key_for_maa_sharde_library_1234',
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      );
+
+      res.json({
+        _id: adminUser._id,
+        name: adminUser.name || 'System Admin',
+        email: adminUser.email,
+        role: 'admin',
+        token,
+      });
+    } else {
+      res.status(401);
+      throw new Error('Invalid email or password');
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const adminProfile = async (req, res, next) => {
+  try {
+    const adminUser = req.user;
+    if (adminUser) {
+      res.json({
+        _id: adminUser._id,
+        name: adminUser.name || 'System Admin',
+        email: adminUser.email,
+        role: 'admin',
+      });
+    } else {
+      res.status(404);
+      throw new Error('Admin not found');
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const adminLogout = async (req, res, next) => {
+  res.json({ message: 'Logged out successfully' });
+};
+
+const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      res.status(400);
+      throw new Error('Please provide current password and new password');
+    }
+
+    let adminUser = await Admin.findById(req.user._id);
+    if (!adminUser) {
+      adminUser = await User.findById(req.user._id);
+    }
+
+    if (!adminUser) {
+      res.status(404);
+      throw new Error('Admin user not found');
+    }
+
+    const isMatch = await adminUser.matchPassword(currentPassword);
+    if (!isMatch) {
+      res.status(400);
+      throw new Error('Incorrect current password');
+    }
+
+    adminUser.password = newPassword;
+    await adminUser.save();
+
+    res.json({ message: 'Password updated successfully' });
   } catch (error) {
     next(error);
   }
@@ -365,4 +477,8 @@ module.exports = {
   deletePlan,
   getContacts,
   deleteContact,
+  adminLogin,
+  adminProfile,
+  adminLogout,
+  changePassword,
 };
