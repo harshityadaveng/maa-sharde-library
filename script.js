@@ -19,8 +19,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 function toggleMenu() {
   const navLinks = document.getElementById("navLinks");
-  navLinks.classList.toggle("active");
+
+  if (navLinks) {
+    navLinks.classList.toggle("active");
+  }
 }
+
+window.toggleMenu = toggleMenu;
 
 const darkBtn = document.getElementById("darkModeBtn");
 
