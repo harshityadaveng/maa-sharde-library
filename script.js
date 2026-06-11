@@ -124,7 +124,7 @@ if (liveSeatGrid) {
       seatsData[data.seatNo] = data;
     });
 
-    for (let i = 1; i <= 45; i++) {
+    for (let i = 1; i <= 100; i++) {
       const seatData = seatsData[i];
 
       let status = "Available";
@@ -147,9 +147,9 @@ if (liveSeatGrid) {
       seat.classList.add("live-seat", status.toLowerCase());
 
       seat.innerHTML = `
-        <span>Seat ${i}</span>
-        <small>${status}</small>
-      `;
+  <span>${i}</span>
+  <small>${status}</small>
+`;
 
       seat.addEventListener("click", () => {
         if (status === "Available") {
