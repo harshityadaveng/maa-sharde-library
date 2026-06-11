@@ -125,9 +125,9 @@ if (liveSeatGrid) {
     const seatsData = {};
 
     snapshot.forEach((doc) => {
-      const data = doc.data();
-      seatsData[data.seatNo] = data;
-    });
+  const data = doc.data();
+  seatsData[Number(data.seatNo)] = data;
+});
 
     for (let i = 1; i <= 75; i++) {
       const seatData = seatsData[i];
