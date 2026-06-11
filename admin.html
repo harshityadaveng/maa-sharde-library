@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Maa Sharde Library</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class="admin-page">
+  <div class="admin-box">
+    <h1>Seat Allotment Panel</h1>
+    <p>Manage library seat allotment</p>
+
+    <form id="seatAllotForm">
+      <input type="number" id="seatNo" placeholder="Seat Number" min="1" max="45">
+
+      <input type="text" id="studentName" placeholder="Student Name">
+
+      <input type="tel" id="studentPhone" placeholder="Phone Number">
+
+      <select id="shift">
+        <option value="">Select Shift</option>
+        <option value="Morning">Morning Shift</option>
+        <option value="Afternoon">Afternoon Shift</option>
+        <option value="Night">Night Shift</option>
+        <option value="Full Day">Full Day</option>
+      </select>
+
+      <select id="status">
+        <option value="">Select Status</option>
+        <option value="Available">Available</option>
+        <option value="Occupied">Occupied</option>
+        <option value="Reserved">Reserved</option>
+      </select>
+
+      <label>Start Date</label>
+      <input type="date" id="startDate">
+
+      <label>End Date</label>
+      <input type="date" id="endDate">
+
+      <button type="submit">Save Seat Details</button>
+
+      <p id="adminMessage"></p>
+    </form>
+  </div>
+</section>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>

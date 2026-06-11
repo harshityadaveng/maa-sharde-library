@@ -1,3 +1,22 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBgfZsyssHftEO_YuyQ6O628rHAYZ8agL0",
+  authDomain: "maa-sharde-digital-library.firebaseapp.com",
+  projectId: "maa-sharde-digital-library",
+  storageBucket: "maa-sharde-digital-library.firebasestorage.app",
+  messagingSenderId: "125895569415",
+  appId: "1:125895569415:web:5da780c6ed7364af2c3aa2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 function toggleMenu() {
   const navLinks = document.getElementById("navLinks");
   navLinks.classList.toggle("active");
@@ -90,5 +109,59 @@ setTimeout(() => {
       message.style.color = "red";
       message.innerHTML = "Something went wrong. Try again.";
     });
+  });
+}
+const liveSeatGrid = document.getElementById("liveSeatGrid");
+
+if (liveSeatGrid) {
+  onSnapshot(collection(db, "seats"), (snapshot) => {
+    liveSeatGrid.innerHTML = "";
+
+    const seatsData = {};
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      seatsData[data.seatNo] = data;
+    });
+
+    for (let i = 1; i <= 45; i++) {
+      const seatData = seatsData[i];
+
+      let status = "Available";
+      let studentName = "";
+      let endDate = "";
+
+      if (seatData) {
+        status = seatData.status || "Available";
+        studentName = seatData.studentName || "";
+        endDate = seatData.endDate || "";
+      }
+
+      const today = new Date().toISOString().split("T")[0];
+
+      if (endDate && endDate < today && status !== "Available") {
+        status = "Expired";
+      }
+
+      const seat = document.createElement("div");
+      seat.classList.add("live-seat", status.toLowerCase());
+
+      seat.innerHTML = `
+        <span>Seat ${i}</span>
+        <small>${status}</small>
+      `;
+
+      seat.addEventListener("click", () => {
+        if (status === "Available") {
+          alert(`Seat ${i} is available.`);
+        } else {
+          alert(
+            `Seat ${i}\nStatus: ${status}\nStudent: ${studentName || "N/A"}\nEnd Date: ${endDate || "N/A"}`
+          );
+        }
+      });
+
+      liveSeatGrid.appendChild(seat);
+    }
   });
 }
