@@ -129,7 +129,7 @@ if (liveSeatGrid) {
       seatsData[data.seatNo] = data;
     });
 
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 75; i++) {
       const seatData = seatsData[i];
 
       let status = "Available";
