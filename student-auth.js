@@ -9,11 +9,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 import {
-  getFirestore,
   collection,
   addDoc,
+  query,
+  where,
+  getDocs,
   serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBgfZsyssHftEO_YuyQ6O628rHAYZ8agL0",
@@ -110,6 +112,33 @@ if (requestBtn) {
       message.innerHTML = "Something went wrong.";
     }
   });
+}
+const seatNoValue = Number(seatNo);
+
+const sameSeatQuery = query(
+  collection(db, "bookingRequests"),
+  where("seatNo", "==", seatNoValue),
+  where("status", "in", ["pending", "approved"])
+);
+
+const sameSeatSnapshot = await getDocs(sameSeatQuery);
+
+if (!sameSeatSnapshot.empty) {
+  alert("This seat already has an active booking request.");
+  return;
+}
+
+const sameStudentQuery = query(
+  collection(db, "bookingRequests"),
+  where("email", "==", currentUser.email),
+  where("status", "in", ["pending", "approved"])
+);
+
+const sameStudentSnapshot = await getDocs(sameStudentQuery);
+
+if (!sameStudentSnapshot.empty) {
+  alert("You already have an active booking request.");
+  return;
 }
 
 /* Logout */
