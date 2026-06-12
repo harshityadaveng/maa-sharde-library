@@ -169,3 +169,58 @@ function loadBookingRequests() {
 
 loadBookingRequests();
 console.log("Admin JS loaded successfully");
+async function approveRequest(requestId) {
+  try {
+    console.log("Approving request:", requestId);
+
+    const requestRef = doc(db, "bookingRequests", requestId);
+    const requestSnap = await getDoc(requestRef);
+
+    if (!requestSnap.exists()) {
+      alert("Request not found");
+      return;
+    }
+
+    const request = requestSnap.data();
+    const seatNo = Number(request.seatNo);
+
+    const seatRef = doc(db, "seats", `seat${seatNo}`);
+
+    await setDoc(seatRef, {
+      seatNo: seatNo,
+      studentName: request.studentName || "",
+      phone: request.phone || "",
+      shift: request.shift || "",
+      status: "Occupied",
+      startDate: request.startDate || "",
+      endDate: request.endDate || "",
+      email: request.email || "",
+      updatedAt: serverTimestamp()
+    });
+
+    await updateDoc(requestRef, {
+      status: "approved",
+      approvedAt: serverTimestamp()
+    });
+
+    alert("Request approved successfully.");
+  } catch (error) {
+    console.error("Approve error:", error);
+    alert("Approve failed. Check console.");
+  }
+}
+async function rejectRequest(requestId) {
+  try {
+    const requestRef = doc(db, "bookingRequests", requestId);
+
+    await updateDoc(requestRef, {
+      status: "rejected",
+      rejectedAt: serverTimestamp()
+    });
+
+    alert("Request rejected.");
+  } catch (error) {
+    console.error("Reject error:", error);
+    alert("Reject failed. Check console.");
+  }
+}
