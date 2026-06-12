@@ -22,7 +22,15 @@ const {
   deletePlan,
   getContacts,
   deleteContact,
+  resolveContact,
 } = require('../controllers/adminController');
+
+const {
+  getAllNotices,
+  createNotice,
+  updateNotice,
+  deleteNotice,
+} = require('../controllers/noticeController');
 
 // Public routes
 router.post('/login', adminLogin);
@@ -59,5 +67,12 @@ router.delete('/plans/:id', deletePlan);
 // Contact management
 router.get('/contacts', getContacts);
 router.delete('/contacts/:id', deleteContact);
+router.put('/contacts/:id/resolve', resolveContact);
+
+// Notice management
+router.get('/notices', getAllNotices);
+router.post('/notices', createNotice);
+router.put('/notices/:id', updateNotice);
+router.delete('/notices/:id', deleteNotice);
 
 module.exports = router;

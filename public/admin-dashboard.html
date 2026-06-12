@@ -245,11 +245,13 @@
     </div>
     <ul class="admin-sidebar-menu">
       <li class="menu-item active" data-target="overviewSection"><a onclick="switchTab('overviewSection')">Dashboard</a></li>
-      <li class="menu-item" data-target="studentManagementSection" data-filter="all"><a onclick="switchTab('studentManagementSection')">Students</a></li>
-      <li class="menu-item" data-target="studentManagementSection" data-filter="pending"><a onclick="switchTab('studentManagementSection', 'pending')">Admissions</a></li>
-      <li class="menu-item" data-target="paymentManagementSection"><a onclick="switchTab('paymentManagementSection')">Payments</a></li>
+      <li class="menu-item" data-target="studentManagementSection" data-filter="all"><a onclick="switchTab('studentManagementSection')">Student Management</a></li>
+      <li class="menu-item" data-target="studentManagementSection" data-filter="pending"><a onclick="switchTab('studentManagementSection', 'pending')">Registration Requests</a></li>
+      <li class="menu-item" data-target="paymentManagementSection"><a onclick="switchTab('paymentManagementSection')">Payment Verification</a></li>
+      <li class="menu-item" data-target="seatManagementSection"><a onclick="switchTab('seatManagementSection')">Seat Management</a></li>
+      <li class="menu-item" data-target="noticesManagementSection"><a onclick="switchTab('noticesManagementSection')">Notices Management</a></li>
+      <li class="menu-item" data-target="contactManagementSection"><a onclick="switchTab('contactManagementSection')">Contact Management</a></li>
       <li class="menu-item" data-target="planManagementSection"><a onclick="switchTab('planManagementSection')">Membership Plans</a></li>
-      <li class="menu-item" data-target="contactManagementSection"><a onclick="switchTab('contactManagementSection')">Contact Messages</a></li>
       <li class="menu-item" data-target="settingsSection"><a onclick="switchTab('settingsSection')">Settings</a></li>
       <li class="menu-item" style="margin-top: 20px;"><a id="logoutBtn">Logout</a></li>
     </ul>
@@ -294,8 +296,9 @@
         <select id="studentPaymentFilter">
           <option value="">All Payments</option>
           <option value="pending">Pending</option>
-          <option value="verified">Verified</option>
-          <option value="failed">Failed</option>
+          <option value="under_verification">Under Verification</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
         </select>
         <input type="text" id="studentPlanFilter" placeholder="Plan filter" />
         <button class="admin-btn" id="studentFilterBtn">Filter</button>
@@ -344,6 +347,76 @@
       <h2>Contact Messages</h2>
       <div style="overflow-x:auto;">
         <table class="admin-table" id="contactsTable"></table>
+      </div>
+    </div>
+
+    <!-- 6. Seat Management -->
+    <div class="dashboard-section" id="seatManagementSection">
+      <h2>Seat Management</h2>
+      <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;">
+        <div style="flex: 1 1 300px; background: #fff; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0;">
+          <h3 style="margin-top:0; color:#0a192f;">Create New Seat</h3>
+          <form id="createSeatForm" class="admin-form-row" style="margin-bottom:0;">
+            <input type="text" id="newSeatNumber" placeholder="Seat Number (e.g. S-10)" required style="width:100%;" />
+            <select id="newSeatShift" style="width:100%; margin-top:8px;">
+              <option value="any">Any Shift</option>
+              <option value="Morning Shift">Morning Shift</option>
+              <option value="Afternoon Shift">Afternoon Shift</option>
+              <option value="Evening Shift">Evening Shift</option>
+              <option value="Full Day">Full Day</option>
+            </select>
+            <button class="admin-btn" type="submit" style="width:100%; margin-top:8px;">Create Seat</button>
+          </form>
+        </div>
+        <div style="flex: 1 1 300px; background: #fff; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0;">
+          <h3 style="margin-top:0; color:#0a192f;">Assign Seat</h3>
+          <form id="assignSeatForm" class="admin-form-row" style="margin-bottom:0;">
+            <select id="assignSeatNumberSelect" required style="width:100%;">
+              <option value="">Select Seat</option>
+            </select>
+            <select id="assignStudentSelect" required style="width:100%; margin-top:8px;">
+              <option value="">Select Active Student</option>
+            </select>
+            <select id="assignShiftSelect" style="width:100%; margin-top:8px;">
+              <option value="any">Any Shift</option>
+              <option value="Morning Shift">Morning Shift</option>
+              <option value="Afternoon Shift">Afternoon Shift</option>
+              <option value="Evening Shift">Evening Shift</option>
+              <option value="Full Day">Full Day</option>
+            </select>
+            <button class="admin-btn" type="submit" style="width:100%; margin-top:8px;">Assign Seat</button>
+          </form>
+        </div>
+      </div>
+      <div class="seats-board">
+        <h3 style="margin: 0; color: #0a192f;">Current Seating Status</h3>
+        <div class="seats-grid" id="seatsGridContainer">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Notices Management -->
+    <div class="dashboard-section" id="noticesManagementSection">
+      <h2>Notices Management</h2>
+      <div style="background: #fff; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0; margin-bottom: 24px;">
+        <h3 style="margin-top:0; color:#0a192f;">Create Announcement / Notice</h3>
+        <form id="addNoticeForm">
+          <div class="admin-form-row" style="margin-bottom: 12px;">
+            <input type="text" id="noticeTitle" placeholder="Notice Title" required style="width: 100%;" />
+          </div>
+          <div class="admin-form-row" style="margin-bottom: 12px;">
+            <textarea id="noticeContent" placeholder="Write notice details here..." required style="width: 100%; height:80px;"></textarea>
+          </div>
+          <div style="margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <input type="checkbox" id="noticeActive" checked style="width:auto; margin:0;" />
+            <label for="noticeActive" style="font-weight:600; font-size:14px; color:#475569;">Active (Visible on Homepage)</label>
+          </div>
+          <button class="admin-btn" type="submit">Publish Notice</button>
+        </form>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table" id="adminNoticesTable"></table>
       </div>
     </div>
 

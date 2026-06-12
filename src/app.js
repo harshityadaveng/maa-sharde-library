@@ -17,6 +17,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const planRoutes = require('./routes/planRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const seatRoutes = require('./routes/seatRoutes');
+const noticeRoutes = require('./routes/noticeRoutes');
 
 const app = express();
 
@@ -94,6 +95,7 @@ app.use('/api/seats', seatRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/contacts', contactRoutes);
+app.use('/api/notices', noticeRoutes);
 
 // Admin Page Routes
 app.get('/admin', (req, res) => {
@@ -104,9 +106,32 @@ app.get('/admin/login', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/admin-login.html'));
 });
 
-app.get(['/admin/dashboard', '/admin/students', '/admin/payments', '/admin/admissions'], (req, res) => {
+const requireAdminAuthForPage = (req, res, next) => {
+  // Admin is authenticated via Bearer token stored by frontend in localStorage.
+  // IMPORTANT: Top-level browser navigation to /admin/* does NOT include custom Authorization headers,
+  // so redirecting here causes an infinite loop with admin.js.
+  //
+  // Allow the HTML to load; the client will validate token via /api/admin/profile and redirect if invalid.
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next();
+  }
+
+  // Optional: if header exists, still validate.
+  const jwt = require('jsonwebtoken');
+  const token = authHeader.split(' ')[1];
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+    return next();
+  } catch (e) {
+    return next();
+  }
+};
+
+app.get(['/admin/dashboard', '/admin/students', '/admin/payments', '/admin/seats', '/admin/notices', '/admin/admissions'], requireAdminAuthForPage, (req, res) => {
   res.sendFile(path.join(__dirname, '../public/admin-dashboard.html'));
 });
+
 
 // Fallback to index.html for undefined routes (supporting SPA routing if needed)
 app.get('*', (req, res) => {

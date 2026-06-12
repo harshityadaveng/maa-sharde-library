@@ -15,7 +15,7 @@ const seatSchema = new mongoose.Schema(
     },
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'Student',
       default: null,
     },
     shift: {

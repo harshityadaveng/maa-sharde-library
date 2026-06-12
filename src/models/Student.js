@@ -105,9 +105,10 @@ const studentSchema = new mongoose.Schema(
     },
     paymentStatus: {
       type: String,
-      enum: ['pending', 'verified', 'failed'],
+      enum: ['pending', 'under_verification', 'approved', 'rejected'],
       default: 'pending',
     },
+
     paymentScreenshot: {
       type: String, // Cloudinary URL
       default: '',
@@ -115,6 +116,17 @@ const studentSchema = new mongoose.Schema(
     registrationDate: {
       type: Date,
       default: Date.now,
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'active', 'expired'],
+      default: 'pending',
+    },
+    startDate: {
+      type: Date,
+    },
+    endDate: {
+      type: Date,
     },
   },
   {

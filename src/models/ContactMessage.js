@@ -22,6 +22,11 @@ const contactMessageSchema = new mongoose.Schema(
       required: [true, 'Message is required'],
       trim: true,
     },
+    status: {
+      type: String,
+      enum: ['pending', 'resolved'],
+      default: 'pending',
+    },
   },
   {
     timestamps: true,

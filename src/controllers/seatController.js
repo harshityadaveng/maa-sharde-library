@@ -10,7 +10,7 @@ const getSeatStatus = async (req, res, next) => {
     const occupiedCount = await Seat.countDocuments({ status: 'occupied' });
     const reservedCount = await Seat.countDocuments({ status: 'reserved' });
 
-    const seats = await Seat.find({}).populate('assignedTo', 'name email phone');
+    const seats = await Seat.find({}).populate('assignedTo', 'name email mobile studentId');
 
     res.json({
       totalSeats: totalCount,

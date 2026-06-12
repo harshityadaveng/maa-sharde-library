@@ -144,12 +144,14 @@ const initAdminDashboard = () => {
     const titleEl = document.getElementById('dashboardTitle');
     if (titleEl) {
       if (sectionId === 'overviewSection') titleEl.textContent = 'Dashboard Overview';
-      else if (sectionId === 'studentManagementSection' && filterType === 'pending') titleEl.textContent = 'Admission Verification';
+      else if (sectionId === 'studentManagementSection' && filterType === 'pending') titleEl.textContent = 'Registration Requests';
       else if (sectionId === 'studentManagementSection') titleEl.textContent = 'Student Management';
-      else if (sectionId === 'paymentManagementSection') titleEl.textContent = 'Payment Management';
+      else if (sectionId === 'paymentManagementSection') titleEl.textContent = 'Payment Verification';
       else if (sectionId === 'planManagementSection') titleEl.textContent = 'Membership Plans';
-      else if (sectionId === 'contactManagementSection') titleEl.textContent = 'Contact Messages';
+      else if (sectionId === 'contactManagementSection') titleEl.textContent = 'Contact Management';
       else if (sectionId === 'settingsSection') titleEl.textContent = 'Admin Settings';
+      else if (sectionId === 'seatManagementSection') titleEl.textContent = 'Seat Management';
+      else if (sectionId === 'noticesManagementSection') titleEl.textContent = 'Notices Management';
     }
 
     // Auto-filter logic for admissions
@@ -159,6 +161,14 @@ const initAdminDashboard = () => {
         admissionFilter.value = filterType === 'pending' ? 'pending' : '';
       }
       loadStudents();
+    }
+
+    if (sectionId === 'seatManagementSection') {
+      loadSeats();
+    }
+
+    if (sectionId === 'noticesManagementSection') {
+      loadAdminNotices();
     }
 
     // Close mobile sidebar if open
@@ -199,11 +209,13 @@ const initAdminDashboard = () => {
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>Email</th>
           <th>Mobile</th>
           <th>Plan</th>
           <th>Admission</th>
           <th>Payment</th>
+          <th>Status</th>
+          <th>Start Date</th>
+          <th>End Date</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -213,11 +225,13 @@ const initAdminDashboard = () => {
             <tr>
               <td>${escapeHtml(student.studentId || '-')}</td>
               <td>${escapeHtml(student.name)}</td>
-              <td>${escapeHtml(student.email)}</td>
               <td>${escapeHtml(student.mobile)}</td>
               <td>${escapeHtml(student.plan)}</td>
               <td>${escapeHtml(student.admissionStatus)}</td>
               <td>${escapeHtml(student.paymentStatus)}</td>
+              <td><span style="font-weight:bold; color:${student.status === 'active' ? 'green' : (student.status === 'expired' ? 'red' : 'orange')}">${escapeHtml(student.status || 'pending')}</span></td>
+              <td>${student.startDate ? new Date(student.startDate).toLocaleDateString() : '-'}</td>
+              <td>${student.endDate ? new Date(student.endDate).toLocaleDateString() : '-'}</td>
               <td class="table-actions">
                 <button class="btn-edit" onclick="editStudent('${student._id}')">Edit</button>
                 <button class="btn-approve" onclick="setAdmissionStatus('${student._id}','approved')">Approve</button>
@@ -327,6 +341,7 @@ const initAdminDashboard = () => {
           <th>Email</th>
           <th>Phone</th>
           <th>Message</th>
+          <th>Status</th>
           <th>Received</th>
           <th>Actions</th>
         </tr>
@@ -339,8 +354,13 @@ const initAdminDashboard = () => {
               <td>${escapeHtml(message.email)}</td>
               <td>${escapeHtml(message.phone || '-')}</td>
               <td>${escapeHtml(message.message)}</td>
+              <td><span style="font-weight:bold; color:${message.status === 'resolved' ? 'green' : 'orange'}">${escapeHtml(message.status || 'pending')}</span></td>
               <td>${new Date(message.createdAt).toLocaleString()}</td>
               <td class="table-actions">
+                ${(message.status || 'pending') === 'pending'
+                  ? `<button class="btn-approve" onclick="resolveContact('${message._id}')">Resolve</button>`
+                  : ''
+                }
                 <button class="btn-delete" onclick="deleteContact('${message._id}')">Delete</button>
               </td>
             </tr>
@@ -368,11 +388,18 @@ const initAdminDashboard = () => {
         { key: 'email', label: 'Email' },
         { key: 'mobile', label: 'Mobile' },
         { key: 'plan', label: 'Plan' },
-        { key: 'admissionStatus', label: 'Admission Status' },
-        { key: 'paymentStatus', label: 'Payment Status' },
+        { key: 'admissionStatus', label: 'Admission Status (pending/approved/rejected)' },
+        { key: 'paymentStatus', label: 'Payment Status (pending/under_verification/approved/rejected)' },
+        { key: 'status', label: 'Lifecycle Status (pending/active/expired)' },
+        { key: 'startDate', label: 'Start Date (YYYY-MM-DD)' },
+        { key: 'endDate', label: 'End Date (YYYY-MM-DD)' },
       ];
       for (const field of fields) {
-        const value = window.prompt(`Enter ${field.label}:`, student[field.key] || '');
+        let defaultVal = student[field.key] || '';
+        if ((field.key === 'startDate' || field.key === 'endDate') && defaultVal) {
+          defaultVal = new Date(defaultVal).toISOString().split('T')[0];
+        }
+        const value = window.prompt(`Enter ${field.label}:`, defaultVal);
         if (value === null) {
           return;
         }
@@ -508,6 +535,20 @@ const initAdminDashboard = () => {
     }
   };
 
+  window.resolveContact = async (contactId) => {
+    try {
+      await fetchWithAuth(`/api/admin/contacts/${contactId}/resolve`, {
+        method: 'PUT',
+      });
+      await loadContacts();
+      statusText.textContent = 'Contact message resolved.';
+      statusText.style.color = '#475569';
+    } catch (error) {
+      statusText.textContent = error.message;
+      statusText.style.color = 'red';
+    }
+  };
+
   const loadOverview = async () => {
     const stats = await fetchWithAuth('/api/admin/overview');
     renderStats(stats);
@@ -581,6 +622,11 @@ const initAdminDashboard = () => {
     statusText.textContent = 'Refreshing dashboard...';
     try {
       await Promise.all([loadOverview(), loadStudents(), loadPayments(), loadPlans(), loadContacts()]);
+      const activeSec = document.querySelector('.dashboard-section.active');
+      if (activeSec) {
+        if (activeSec.id === 'seatManagementSection') await loadSeats();
+        if (activeSec.id === 'noticesManagementSection') await loadAdminNotices();
+      }
       statusText.textContent = 'Dashboard refreshed.';
       statusText.style.color = '#475569';
     } catch (error) {
@@ -656,6 +702,244 @@ const initAdminDashboard = () => {
       } catch (err) {
         settingsMsg.style.color = 'red';
         settingsMsg.textContent = err.message;
+      }
+    });
+  }
+
+  const loadSeats = async () => {
+    try {
+      const data = await fetchWithAuth('/api/seats/status');
+      
+      // Render visual seat grid
+      const gridContainer = document.getElementById('seatsGridContainer');
+      if (gridContainer) {
+        if (!data.seats || !data.seats.length) {
+          gridContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #475569;">No seats created yet.</p>';
+        } else {
+          gridContainer.innerHTML = data.seats
+            .map((seat) => {
+              const statusClass = seat.status; // available, occupied, reserved
+              const assignedUser = seat.assignedTo ? seat.assignedTo.name : '';
+              const shiftInfo = seat.shift && seat.shift !== 'any' ? seat.shift : '';
+              
+              return `
+                <div class="seat-card ${statusClass}">
+                  <h4>${escapeHtml(seat.seatNumber)}</h4>
+                  ${shiftInfo ? `<span class="seat-shift">${escapeHtml(shiftInfo)}</span>` : ''}
+                  ${assignedUser ? `<span class="seat-user" title="${escapeHtml(assignedUser)}">${escapeHtml(assignedUser)}</span>` : ''}
+                  ${seat.status !== 'available' 
+                    ? `<button onclick="releaseSeat('${seat._id}')">Release</button>`
+                    : `<span style="font-size:11px; color:#166534; margin:6px 0;">Available</span>`
+                  }
+                </div>
+              `;
+            })
+            .join('');
+        }
+      }
+
+      // Populate Seat Select for Assign Form
+      const seatSelect = document.getElementById('assignSeatNumberSelect');
+      if (seatSelect) {
+        seatSelect.innerHTML = '<option value="">Select Available Seat *</option>';
+        if (data.seats) {
+          data.seats
+            .filter((s) => s.status === 'available')
+            .forEach((seat) => {
+              const opt = document.createElement('option');
+              opt.value = seat.seatNumber;
+              opt.textContent = seat.seatNumber;
+              seatSelect.appendChild(opt);
+            });
+        }
+      }
+
+      // Populate Students Select for Assign Form
+      const studentSelect = document.getElementById('assignStudentSelect');
+      if (studentSelect) {
+        studentSelect.innerHTML = '<option value="">Select Active Student *</option>';
+        const students = await fetchWithAuth('/api/admin/students?admissionStatus=approved');
+        students.forEach((student) => {
+          const opt = document.createElement('option');
+          opt.value = student._id;
+          opt.textContent = `${student.name} (${student.studentId})`;
+          studentSelect.appendChild(opt);
+        });
+      }
+    } catch (err) {
+      console.error('Error loading seats:', err);
+    }
+  };
+
+  window.releaseSeat = async (seatId) => {
+    if (!window.confirm('Are you sure you want to release this seat?')) return;
+    try {
+      await fetchWithAuth(`/api/seats/release/${seatId}`, {
+        method: 'PUT',
+      });
+      statusText.textContent = 'Seat released successfully.';
+      statusText.style.color = '#475569';
+      await loadSeats();
+    } catch (error) {
+      statusText.textContent = error.message;
+      statusText.style.color = 'red';
+    }
+  };
+
+  const loadAdminNotices = async () => {
+    try {
+      const notices = await fetchWithAuth('/api/admin/notices');
+      const table = document.getElementById('adminNoticesTable');
+      if (!table) return;
+
+      if (!notices.length) {
+        table.innerHTML = '<tr><td>No notices found.</td></tr>';
+        return;
+      }
+
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Active</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${notices
+            .map((notice) => `
+              <tr>
+                <td style="font-weight:600;">${escapeHtml(notice.title)}</td>
+                <td>${escapeHtml(notice.content)}</td>
+                <td><span style="font-weight:bold; color:${notice.active ? 'green' : 'red'}">${notice.active ? 'Yes' : 'No'}</span></td>
+                <td>${new Date(notice.createdAt).toLocaleDateString()}</td>
+                <td class="table-actions">
+                  <button class="btn-edit" onclick="editNotice('${notice._id}')">Edit</button>
+                  <button class="btn-delete" onclick="deleteNotice('${notice._id}')">Delete</button>
+                </td>
+              </tr>
+            `)
+            .join('')}
+        </tbody>
+      `;
+    } catch (error) {
+      console.error('Error loading admin notices:', error);
+    }
+  };
+
+  window.editNotice = async (noticeId) => {
+    try {
+      const notices = await fetchWithAuth('/api/admin/notices');
+      const notice = notices.find((n) => n._id === noticeId);
+      if (!notice) return;
+
+      const title = window.prompt('Notice Title:', notice.title);
+      if (title === null) return;
+      const content = window.prompt('Notice Content:', notice.content);
+      if (content === null) return;
+      const active = window.confirm('Set notice as active?');
+
+      await fetchWithAuth(`/api/admin/notices/${noticeId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ title: title.trim(), content: content.trim(), active }),
+      });
+
+      statusText.textContent = 'Notice updated successfully.';
+      statusText.style.color = '#475569';
+      await loadAdminNotices();
+    } catch (error) {
+      statusText.textContent = error.message;
+      statusText.style.color = 'red';
+    }
+  };
+
+  window.deleteNotice = async (noticeId) => {
+    if (!window.confirm('Delete this notice permanently?')) return;
+    try {
+      await fetchWithAuth(`/api/admin/notices/${noticeId}`, {
+        method: 'DELETE',
+      });
+      statusText.textContent = 'Notice deleted successfully.';
+      statusText.style.color = '#475569';
+      await loadAdminNotices();
+    } catch (error) {
+      statusText.textContent = error.message;
+      statusText.style.color = 'red';
+    }
+  };
+
+  // Create Seat Form Submit
+  const createSeatForm = document.getElementById('createSeatForm');
+  if (createSeatForm) {
+    createSeatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const seatNumber = document.getElementById('newSeatNumber').value.trim();
+      const shift = document.getElementById('newSeatShift').value;
+
+      try {
+        await fetchWithAuth('/api/seats', {
+          method: 'POST',
+          body: JSON.stringify({ seatNumber, shift }),
+        });
+        createSeatForm.reset();
+        statusText.textContent = `Seat ${seatNumber} created successfully.`;
+        statusText.style.color = '#475569';
+        await loadSeats();
+      } catch (err) {
+        statusText.textContent = err.message;
+        statusText.style.color = 'red';
+      }
+    });
+  }
+
+  // Assign Seat Form Submit
+  const assignSeatForm = document.getElementById('assignSeatForm');
+  if (assignSeatForm) {
+    assignSeatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const seatNumber = document.getElementById('assignSeatNumberSelect').value;
+      const studentId = document.getElementById('assignStudentSelect').value;
+      const shift = document.getElementById('assignShiftSelect').value;
+
+      try {
+        await fetchWithAuth('/api/seats/assign', {
+          method: 'PUT',
+          body: JSON.stringify({ seatNumber, studentId, shift }),
+        });
+        assignSeatForm.reset();
+        statusText.textContent = 'Seat assigned successfully.';
+        statusText.style.color = '#475569';
+        await loadSeats();
+      } catch (err) {
+        statusText.textContent = err.message;
+        statusText.style.color = 'red';
+      }
+    });
+  }
+
+  // Add Notice Form Submit
+  const addNoticeForm = document.getElementById('addNoticeForm');
+  if (addNoticeForm) {
+    addNoticeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('noticeTitle').value.trim();
+      const content = document.getElementById('noticeContent').value.trim();
+      const active = document.getElementById('noticeActive').checked;
+
+      try {
+        await fetchWithAuth('/api/admin/notices', {
+          method: 'POST',
+          body: JSON.stringify({ title, content, active }),
+        });
+        addNoticeForm.reset();
+        statusText.textContent = 'Notice published successfully.';
+        statusText.style.color = '#475569';
+        await loadAdminNotices();
+      } catch (err) {
+        statusText.textContent = err.message;
+        statusText.style.color = 'red';
       }
     });
   }

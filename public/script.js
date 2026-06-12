@@ -268,3 +268,57 @@ if (studentRegisterForm) {
     }, 1500);
   });
 }
+
+// Fetch and render notices on homepage
+async function loadNotices() {
+  const noticesSection = document.getElementById('notices');
+  const noticesContainer = document.getElementById('noticesContainer');
+  if (!noticesSection || !noticesContainer) return;
+
+  try {
+    const response = await fetch(`${apiBaseUrl}/api/notices`);
+    if (!response.ok) return;
+    const notices = await response.json();
+    if (!notices || !notices.length) {
+      noticesSection.style.display = 'none';
+      return;
+    }
+
+    noticesContainer.innerHTML = '';
+    notices.forEach((notice) => {
+      const card = document.createElement('div');
+      card.className = 'notice-card';
+      
+      const title = document.createElement('h3');
+      title.textContent = notice.title;
+      
+      const content = document.createElement('p');
+      content.textContent = notice.content;
+      
+      const date = document.createElement('span');
+      date.className = 'notice-date';
+      date.textContent = new Date(notice.createdAt).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      card.appendChild(title);
+      card.appendChild(content);
+      card.appendChild(date);
+      
+      noticesContainer.appendChild(card);
+    });
+    
+    noticesSection.style.display = 'block';
+  } catch (error) {
+    console.error('Failed to load notices:', error);
+  }
+}
+
+loadNotices();
+
+// Dynamically update admin login href to resolve correctly under both file:// and http:// schemes
+document.querySelectorAll('a[href="/admin/login"]').forEach((link) => {
+  link.href = `${apiBaseUrl}/admin/login`;
+});

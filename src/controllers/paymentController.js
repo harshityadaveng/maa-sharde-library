@@ -1,5 +1,6 @@
 const Payment = require('../models/Payment');
 const Student = require('../models/Student');
+const Plan = require('../models/Plan');
 const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
 
@@ -74,8 +75,9 @@ const uploadPayment = async (req, res, next) => {
     });
 
     // Update student's payment status
-    student.paymentStatus = 'pending'; // admin will verify
+    student.paymentStatus = 'under_verification';
     await student.save();
+
 
     res.status(201).json({
       message: 'Payment screenshot uploaded successfully. Your payment is under verification.',
@@ -151,11 +153,42 @@ const verifyPayment = async (req, res, next) => {
     payment.adminRemarks = req.body.adminRemarks || 'Payment verified and approved.';
     await payment.save();
 
-    // Also update student's paymentStatus to verified
-    await Student.findByIdAndUpdate(payment.studentId, {
-      paymentStatus: 'verified',
-      admissionStatus: 'approved',
-    });
+    const student = await Student.findById(payment.studentId);
+    if (student) {
+      student.paymentStatus = 'approved';
+      student.admissionStatus = 'approved';
+      student.status = 'active';
+      if (!student.startDate) {
+        student.startDate = new Date();
+      }
+      if (!student.endDate) {
+        let durationDays = 30;
+        const plan = await Plan.findOne({ title: student.plan });
+        if (plan) {
+          const durStr = plan.duration.toLowerCase();
+          const match = durStr.match(/^(\d+)\s*(day|month|year|week)/);
+          if (match) {
+            const val = parseInt(match[1]);
+            const type = match[2];
+            if (type.startsWith('day')) durationDays = val;
+            else if (type.startsWith('week')) durationDays = val * 7;
+            else if (type.startsWith('month')) durationDays = val * 30;
+            else if (type.startsWith('year')) durationDays = val * 365;
+          }
+        } else {
+          const planLower = student.plan.toLowerCase();
+          if (planLower.includes('daily')) durationDays = 1;
+          else if (planLower.includes('monthly')) durationDays = 30;
+          else if (planLower.includes('quarterly')) durationDays = 90;
+          else if (planLower.includes('yearly')) durationDays = 365;
+        }
+        const end = new Date(student.startDate);
+        end.setDate(end.getDate() + durationDays);
+        student.endDate = end;
+      }
+      await student.save();
+    }
+
 
     res.json({
       message: 'Payment has been approved successfully.',
@@ -183,10 +216,13 @@ const rejectPayment = async (req, res, next) => {
     payment.adminRemarks = adminRemarks || 'Payment rejected by admin.';
     await payment.save();
 
-    // Also update student's paymentStatus to failed
-    await Student.findByIdAndUpdate(payment.studentId, {
-      paymentStatus: 'failed',
-    });
+    const student = await Student.findById(payment.studentId);
+    if (student) {
+      student.paymentStatus = 'rejected';
+      student.status = 'expired';
+      await student.save();
+    }
+
 
     res.json({
       message: 'Payment has been rejected.',
