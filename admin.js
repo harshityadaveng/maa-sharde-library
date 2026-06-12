@@ -22,7 +22,7 @@ const db = getFirestore(app);
 const seatAllotForm = document.getElementById("seatAllotForm");
 const adminMessage = document.getElementById("adminMessage");
 
-seatAllotForm.addEventListener("submit", async function(e) {
+seatAllotForm.addEventListener ("submit", async function(e) {
   e.preventDefault();
 
   const seatNo = document.getElementById("seatNo").value;
@@ -80,3 +80,4 @@ seatAllotForm.addEventListener("submit", async function(e) {
   adminMessage.innerHTML = "Something went wrong.";
   console.log(error);
 }
+});
