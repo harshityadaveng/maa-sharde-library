@@ -9,12 +9,14 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 import {
+  getFirestore,
   collection,
   addDoc,
   query,
   where,
   getDocs,
   serverTimestamp
+
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyBgfZsyssHftEO_YuyQ6O628rHAYZ8agL0",
@@ -112,19 +114,9 @@ if (requestBtn) {
     }
   });
 }
-const seatNoValue = Number(seatNo);
-
-const sameSeatQuery = query(
-  collection(db, "bookingRequests"),
-  where("seatNo", "==", seatNoValue),
-  where("status", "in", ["pending", "approved"])
-);
-
-const sameSeatSnapshot = await getDocs(sameSeatQuery);
 
 if (!sameSeatSnapshot.empty) {
   alert("This seat already has an active booking request.");
-  return;
 }
 
 const sameStudentQuery = query(
