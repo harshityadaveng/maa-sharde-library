@@ -1,4 +1,8 @@
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 import {
+  getFirestore,
   collection,
   doc,
   getDoc,
@@ -6,16 +10,8 @@ import {
   updateDoc,
   onSnapshot,
   serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBgfZsyssHftEO_YuyQ6O628rHAYZ8agL0",
@@ -172,3 +168,4 @@ function loadBookingRequests() {
 }
 
 loadBookingRequests();
+console.log("Admin JS loaded successfully");
