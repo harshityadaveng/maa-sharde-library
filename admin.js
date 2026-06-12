@@ -3,7 +3,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/fireba
 import {
   getFirestore,
   doc,
-  setDoc
+  setDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -39,24 +40,43 @@ seatAllotForm.addEventListener("submit", async function(e) {
   }
 
   try {
-    await setDoc(doc(db, "seats", `seat${seatNo}`), {
-      seatNo: Number(seatNo),
-      studentName: studentName,
-      phone: studentPhone,
-      shift: shift,
-      status: status,
-      startDate: startDate,
-      endDate: endDate
-    });
 
-    adminMessage.style.color = "green";
-    adminMessage.innerHTML = `Seat ${seatNo} saved successfully!`;
+  const seatRef = doc(db, "seats", `seat${seatNo}`);
+  const seatSnap = await getDoc(seatRef);
 
-    seatAllotForm.reset();
+  if (seatSnap.exists()) {
+    const oldData = seatSnap.data();
 
-  } catch (error) {
-    adminMessage.style.color = "red";
-    adminMessage.innerHTML = "Something went wrong.";
-    console.log(error);
+    if (
+      oldData.status === "Occupied" ||
+      oldData.status === "Reserved"
+    ) {
+      adminMessage.style.color = "red";
+      adminMessage.innerHTML =
+        `Seat ${seatNo} is already ${oldData.status}.`;
+
+      return;
+    }
   }
-});
+
+  await setDoc(seatRef, {
+    seatNo: Number(seatNo),
+    studentName: studentName,
+    phone: studentPhone,
+    shift: shift,
+    status: status,
+    startDate: startDate,
+    endDate: endDate
+  });
+
+  adminMessage.style.color = "green";
+  adminMessage.innerHTML =
+    `Seat ${seatNo} saved successfully!`;
+
+  seatAllotForm.reset();
+
+} catch (error) {
+  adminMessage.style.color = "red";
+  adminMessage.innerHTML = "Something went wrong.";
+  console.log(error);
+}
