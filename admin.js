@@ -9,7 +9,8 @@ import {
   setDoc,
   updateDoc,
   onSnapshot,
-  serverTimestamp
+  serverTimestamp,
+  writeBatch
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -223,4 +224,117 @@ async function rejectRequest(requestId) {
     console.error("Reject error:", error);
     alert("Reject failed. Check console.");
   }
+}
+/* =========================
+   RESET ALL SEATS
+========================= */
+
+const resetSeatsBtn = document.getElementById("resetSeatsBtn");
+
+if (resetSeatsBtn) {
+  resetSeatsBtn.addEventListener("click", async () => {
+
+    const confirmReset = confirm(
+      "Are you sure? All 75 seats will become Available."
+    );
+
+    if (!confirmReset) return;
+
+    try {
+
+      const batch = writeBatch(db);
+
+      for (let i = 1; i <= 75; i++) {
+
+        const seatRef = doc(db, "seats", `seat${i}`);
+
+        batch.set(seatRef, {
+          seatNo: i,
+          studentName: "",
+          phone: "",
+          shift: "",
+          status: "Available",
+          startDate: "",
+          endDate: "",
+          email: "",
+          updatedAt: serverTimestamp()
+        });
+
+      }
+
+      await batch.commit();
+
+      alert("All 75 seats are now Available.");
+
+    } catch (error) {
+
+      console.error(error);
+      alert("Failed to reset all seats.");
+
+    }
+  });
+}
+
+/* =========================
+   RESET SINGLE SEAT
+========================= */
+
+const singleSeatResetInput =
+  document.getElementById("singleSeatResetInput");
+
+const singleSeatResetBtn =
+  document.getElementById("singleSeatResetBtn");
+
+if (singleSeatResetBtn) {
+
+  singleSeatResetBtn.addEventListener("click", async () => {
+
+    const seatNo =
+      Number(singleSeatResetInput.value);
+
+    if (
+      !seatNo ||
+      seatNo < 1 ||
+      seatNo > 75
+    ) {
+      alert("Enter seat number between 1 and 75.");
+      return;
+    }
+
+    const confirmReset = confirm(
+      `Reset Seat ${seatNo}?`
+    );
+
+    if (!confirmReset) return;
+
+    try {
+
+      const seatRef =
+        doc(db, "seats", `seat${seatNo}`);
+
+      await setDoc(seatRef, {
+        seatNo: seatNo,
+        studentName: "",
+        phone: "",
+        shift: "",
+        status: "Available",
+        startDate: "",
+        endDate: "",
+        email: "",
+        updatedAt: serverTimestamp()
+      });
+
+      alert(`Seat ${seatNo} is now Available.`);
+
+      singleSeatResetInput.value = "";
+
+    } catch (error) {
+
+      console.error(error);
+      alert("Failed to reset seat.");
+
+    }
+
+  });
+
 }

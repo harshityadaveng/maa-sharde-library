@@ -1621,3 +1621,34 @@ body.dark-mode .payment-box p {
 .reject-btn:hover {
   background: #b91c1c;
 }
+.seat-reset-section{
+  margin-top:30px;
+}
+
+.reset-btn{
+  background:#f5c542;
+  color:#0b1b33;
+  border:none;
+  padding:12px 18px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.reset-btn:hover{
+  opacity:.9;
+}
+
+.single-reset-box{
+  display:flex;
+  gap:12px;
+  margin-top:15px;
+  flex-wrap:wrap;
+}
+
+.single-reset-box input{
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  width:220px;
+}
