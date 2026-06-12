@@ -95,110 +95,80 @@ seatAllotForm.addEventListener ("submit", async function(e) {
 const bookingRequestsList = document.getElementById("bookingRequestsList");
 
 function loadBookingRequests() {
-  const requestsRef = collection(db, "bookingRequests");
+  const bookingRequestsList = document.getElementById("bookingRequestsList");
 
-  onSnapshot(requestsRef, (snapshot) => {
-    bookingRequestsList.innerHTML = "";
-
-    let hasPending = false;
-
-    snapshot.forEach((docSnap) => {
-      const request = docSnap.data();
-      const requestId = docSnap.id;
-
-      if (request.status !== "pending") return;
-
-      hasPending = true;
-
-      const card = document.createElement("div");
-      card.className = "request-card";
-
-      card.innerHTML = `
-        <h3>${request.studentName}</h3>
-        <p><strong>Phone:</strong> ${request.phone}</p>
-        <p><strong>Email:</strong> ${request.email}</p>
-        <p><strong>Seat No:</strong> ${request.seatNo}</p>
-        <p><strong>Shift:</strong> ${request.shift}</p>
-        <p><strong>Start Date:</strong> ${request.startDate}</p>
-        <p><strong>End Date:</strong> ${request.endDate}</p>
-
-        <button class="approve-btn" data-id="${requestId}">Approve</button>
-        <button class="reject-btn" data-id="${requestId}">Reject</button>
-      `;
-
-      bookingRequestsList.appendChild(card);
-    });
-
-    if (!hasPending) {
-      bookingRequestsList.innerHTML = "<p>No pending booking requests.</p>";
-    }
-
-    document.querySelectorAll(".approve-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        approveRequest(btn.dataset.id);
-      });
-    });
-
-    document.querySelectorAll(".reject-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        rejectRequest(btn.dataset.id);
-      });
-    });
-  });
-}
-
-async function approveRequest(requestId) {
-  const requestRef = doc(db, "bookingRequests", requestId);
-  const requestSnap = await getDoc(requestRef);
-
-  if (!requestSnap.exists()) {
-    alert("Request not found");
+  if (!bookingRequestsList) {
+    console.error("bookingRequestsList div not found in admin.html");
     return;
   }
 
-  const request = requestSnap.data();
-  const seatId = `seat${request.seatNo}`;
-  const seatRef = doc(db, "seats", seatId);
-  const seatSnap = await getDoc(seatRef);
+  const requestsRef = collection(db, "bookingRequests");
 
-  if (seatSnap.exists()) {
-    const seatData = seatSnap.data();
+  onSnapshot(
+    requestsRef,
+    (snapshot) => {
+      bookingRequestsList.innerHTML = "";
 
-    if (seatData.status === "Occupied" || seatData.status === "Reserved") {
-      alert("This seat is already allotted.");
-      return;
+      if (snapshot.empty) {
+        bookingRequestsList.innerHTML = "<p>No booking requests found.</p>";
+        return;
+      }
+
+      let hasPending = false;
+
+      snapshot.forEach((docSnap) => {
+        const request = docSnap.data();
+
+        console.log("Request found:", request);
+
+        if (request.status !== "pending") return;
+
+        hasPending = true;
+
+        const card = document.createElement("div");
+        card.className = "request-card";
+
+        card.innerHTML = `
+          <h3>${request.studentName || "No Name"}</h3>
+          <p><strong>Phone:</strong> ${request.phone || "N/A"}</p>
+          <p><strong>Email:</strong> ${request.email || "N/A"}</p>
+          <p><strong>Seat No:</strong> ${request.seatNo || "N/A"}</p>
+          <p><strong>Shift:</strong> ${request.shift || "N/A"}</p>
+          <p><strong>Start Date:</strong> ${request.startDate || "N/A"}</p>
+          <p><strong>End Date:</strong> ${request.endDate || "N/A"}</p>
+
+          <button class="approve-btn" data-id="${docSnap.id}">Approve</button>
+          <button class="reject-btn" data-id="${docSnap.id}">Reject</button>
+        `;
+
+        bookingRequestsList.appendChild(card);
+      });
+
+      if (!hasPending) {
+        bookingRequestsList.innerHTML = "<p>No pending booking requests.</p>";
+      }
+
+      document.querySelectorAll(".approve-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          approveRequest(btn.dataset.id);
+        });
+      });
+
+      document.querySelectorAll(".reject-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          rejectRequest(btn.dataset.id);
+        });
+      });
+    },
+    (error) => {
+      console.error("Firestore bookingRequests error:", error);
+      bookingRequestsList.innerHTML = `
+        <p style="color:red;">
+          Error loading booking requests. Check console.
+        </p>
+      `;
     }
-  }
-
-  await setDoc(seatRef, {
-    seatNo: Number(request.seatNo),
-    studentName: request.studentName,
-    phone: request.phone,
-    shift: request.shift,
-    status: "Occupied",
-    startDate: request.startDate,
-    endDate: request.endDate,
-    email: request.email,
-    updatedAt: serverTimestamp()
-  });
-
-  await updateDoc(requestRef, {
-    status: "approved",
-    approvedAt: serverTimestamp()
-  });
-
-  alert("Booking request approved successfully.");
-}
-
-async function rejectRequest(requestId) {
-  const requestRef = doc(db, "bookingRequests", requestId);
-
-  await updateDoc(requestRef, {
-    status: "rejected",
-    rejectedAt: serverTimestamp()
-  });
-
-  alert("Booking request rejected.");
+  );
 }
 
 loadBookingRequests();
