@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class="admin-page">
+  <div class="admin-box">
+    <h1>Seat Booking Request</h1>
+
+    <input type="text" id="studentName" placeholder="Your Name">
+    <input type="tel" id="phone" placeholder="Phone Number">
+    <input type="number" id="seatNo" placeholder="Seat Number" min="1" max="75">
+
+    <select id="shift">
+      <option value="">Select Shift</option>
+      <option>Morning</option>
+      <option>Afternoon</option>
+      <option>Night</option>
+      <option>Full Day</option>
+    </select>
+
+    <label>Start Date</label>
+    <input type="date" id="startDate">
+
+    <label>End Date</label>
+    <input type="date" id="endDate">
+
+    <button id="requestBtn">Send Booking Request</button>
+    <br><br>
+    <button id="logoutBtn">Logout</button>
+
+    <p id="requestMessage"></p>
+  </div>
+</section>
+
+<script type="module" src="student-auth.js"></script>
+</body>
+</html>
