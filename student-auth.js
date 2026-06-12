@@ -15,8 +15,7 @@ import {
   where,
   getDocs,
   serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyBgfZsyssHftEO_YuyQ6O628rHAYZ8agL0",
   authDomain: "maa-sharde-digital-library.firebaseapp.com",
